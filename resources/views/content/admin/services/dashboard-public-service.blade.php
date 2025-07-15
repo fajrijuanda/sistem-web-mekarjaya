@@ -161,8 +161,7 @@
     </div>
 
     {{-- Baris 3: Tabel Kerja Utama --}}
-    <div class="row g-6 mt-4">
-        {{-- Diambil dari "Projects table" - Link 1 --}}
+    {{-- <div class="row g-6 mt-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -186,6 +185,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
