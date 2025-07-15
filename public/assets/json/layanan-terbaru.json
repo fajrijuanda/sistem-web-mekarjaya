@@ -1,0 +1,94 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "service_name": "Surat Keterangan Usaha",
+            "service_type": "Layanan Usaha",
+            "applicant_name": "Budi Santoso",
+            "date": "15 Juli 2025",
+            "status": 2,
+            "assignee": "Ahmad Susanto"
+        },
+        {
+            "id": 2,
+            "service_name": "Permohonan Surat Pindah",
+            "service_type": "Layanan Kependudukan",
+            "applicant_name": "Siti Aminah",
+            "date": "15 Juli 2025",
+            "status": 2,
+            "assignee": "Citra Lestari"
+        },
+        {
+            "id": 3,
+            "service_name": "Surat Keterangan Tidak Mampu",
+            "service_type": "Layanan Sosial",
+            "applicant_name": "Asep Sunandar",
+            "date": "14 Juli 2025",
+            "status": 1,
+            "assignee": "Ahmad Susanto"
+        },
+        {
+            "id": 4,
+            "service_name": "Izin Mendirikan Bangunan",
+            "service_type": "Layanan Umum",
+            "applicant_name": "Dewi Lestari",
+            "date": "14 Juli 2025",
+            "status": 3,
+            "assignee": "Bambang Wijoyo"
+        },
+        {
+            "id": 5,
+            "service_name": "Pembuatan Kartu Keluarga Baru",
+            "service_type": "Layanan Kependudukan",
+            "applicant_name": "Joko Susilo",
+            "date": "13 Juli 2025",
+            "status": 1,
+            "assignee": "Citra Lestari"
+        },
+        {
+            "id": 6,
+            "service_name": "Surat Pengantar Nikah",
+            "service_type": "Layanan Kependudukan",
+            "applicant_name": "Rina Wati",
+            "date": "13 Juli 2025",
+            "status": 1,
+            "assignee": "Ahmad Susanto"
+        },
+        {
+            "id": 7,
+            "service_name": "Rekomendasi Bantuan Sosial",
+            "service_type": "Layanan Sosial",
+            "applicant_name": "Suparman",
+            "date": "12 Juli 2025",
+            "status": 1,
+            "assignee": "Bambang Wijoyo"
+        },
+        {
+            "id": 8,
+            "service_name": "Legalisir Dokumen",
+            "service_type": "Layanan Umum",
+            "applicant_name": "Eka Putri",
+            "date": "12 Juli 2025",
+            "status": 2,
+            "assignee": "Citra Lestari"
+        },
+        {
+            "id": 9,
+            "service_name": "Surat Keterangan Domisili",
+            "service_type": "Layanan Kependudukan",
+            "applicant_name": "Hendrawan",
+            "date": "11 Juli 2025",
+            "status": 1,
+            "assignee": "Ahmad Susanto"
+        },
+        {
+            "id": 10,
+            "service_name": "Pembaruan Data KTP",
+            "service_type": "Layanan Kependudukan",
+            "applicant_name": "Putri Ayudia",
+            "date": "11 Juli 2025",
+            "status": 3,
+            "assignee": "Citra Lestari"
+        }
+    ]
+}

@@ -1,0 +1,130 @@
+{
+  "menu": [
+   
+    {
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons ti ti-smart-home",
+      "slug": "dashboard",
+      "submenu": [
+        {
+          "url": "/",
+          "name": "Utama",
+          "icon": "menu-icon tf-icons ti ti-chart-pie-2",
+          "slug": "dashboard-analytics"
+        },
+        {
+          "url": "dashboard/pelayanan",
+          "name": "Pelayanan Publik",
+          "icon": "menu-icon tf-icons ti ti-file-text",
+          "slug": "dashboard-pelayanan"
+        },
+        {
+          "url": "dashboard/konten",
+          "name": "Konten & Website",
+          "icon": "menu-icon tf-icons ti ti-news",
+          "slug": "dashboard-konten"
+        }
+      ]
+    },
+    {
+      "name": "Administrasi",
+      "icon": "menu-icon tf-icons ti ti-files",
+      "slug": "administrasi",
+      "submenu": [
+        {
+          "url": "layanan",
+          "name": "Layanan Surat",
+          "icon": "menu-icon tf-icons ti ti-mail",
+          "slug": "administrasi-layanan"
+        },
+        {
+          "url": "arsip",
+          "name": "Arsip Dokumen",
+          "icon": "menu-icon tf-icons ti ti-archive",
+          "slug": "administrasi-arsip"
+        }
+      ]
+    },
+    {
+      "name": "Artikel Desa",
+      "icon": "menu-icon tf-icons ti ti-news",
+      "slug": "artikel",
+      "submenu": [
+        {
+          "url": "artikel",
+          "name": "Semua Artikel",
+          "icon": "menu-icon tf-icons ti ti-list-details",
+          "slug": "artikel-list"
+        },
+        {
+          "url": "artikel/create",
+          "name": "Tambah Baru",
+          "icon": "menu-icon tf-icons ti ti-plus",
+          "slug": "artikel-create"
+        },
+        {
+          "url": "artikel/kategori",
+          "name": "Kategori",
+          "icon": "menu-icon tf-icons ti ti-tag",
+          "slug": "artikel-kategori"
+        }
+      ]
+    },
+    {
+      "name": "Profil Desa",
+      "icon": "menu-icon tf-icons ti ti-building-community",
+      "slug": "profil-desa",
+      "submenu": [
+        {
+          "url": "profil/identitas",
+          "name": "Identitas Desa",
+          "icon": "menu-icon tf-icons ti ti-id",
+          "slug": "profil-desa-identitas"
+        },
+        {
+          "url": "profil/sejarah",
+          "name": "Sejarah Desa",
+          "icon": "menu-icon tf-icons ti ti-history",
+          "slug": "profil-desa-sejarah"
+        },
+        {
+          "url": "profil/visi-misi",
+          "name": "Visi & Misi",
+          "icon": "menu-icon tf-icons ti ti-target-arrow",
+          "slug": "profil-desa-visi-misi"
+        },
+        {
+          "url": "profil/pemerintahan",
+          "name": "Pemerintahan Desa",
+          "icon": "menu-icon tf-icons ti ti-hierarchy-2",
+          "slug": "profil-desa-pemerintahan"
+        },
+        {
+          "url": "profil/wilayah",
+          "name": "Wilayah Administratif",
+          "icon": "menu-icon tf-icons ti ti-map-2",
+          "slug": "profil-desa-wilayah"
+        }
+      ]
+    },
+    {
+      "name": "Pengguna",
+      "icon": "menu-icon tf-icons ti ti-users",
+      "slug": "pengguna",
+      "submenu": [
+        {
+          "url": "users",
+          "name": "Manajemen Pengguna",
+          "icon": "menu-icon tf-icons ti ti-user-cog",
+          "slug": "user-management"
+        },
+        {
+          "url": "roles",
+          "name": "Hak Akses",
+          "icon": "menu-icon tf-icons ti ti-shield-check",
+          "slug": "user-roles"
+        }
+      ]
+    }
+  ]
+}
