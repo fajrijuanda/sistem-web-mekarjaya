@@ -12,6 +12,6 @@ class PublicService extends Controller
 
         $pageConfigs = ['myLayout' => 'horizontal'];
 
-        return view('content.admin.dashboard.services.admin-dashboard-services', ['pageConfigs' => $pageConfigs]);
+        return view('content.admin.services.dashboard-public-service', ['pageConfigs' => $pageConfigs]);
     }
 }

@@ -12,6 +12,6 @@ class Main extends Controller
 
         $pageConfigs = ['myLayout' => 'horizontal'];
 
-        return view('content.admin.dashboard.main-dashboard', ['pageConfigs' => $pageConfigs]);
+        return view('content.admin.main.dashboard-main', ['pageConfigs' => $pageConfigs]);
     }
 }

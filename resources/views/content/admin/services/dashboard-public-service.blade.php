@@ -13,7 +13,7 @@
 
 @section('page-script')
     {{-- Arahkan ke file JS khusus untuk dashboard ini --}}
-    @vite(['resources/assets/js/dashboard-services.js'])
+    @vite(['resources/assets/js/dashboard-public-service.js'])
 @endsection
 
 @section('content')

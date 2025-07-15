@@ -12,6 +12,6 @@ class Content extends Controller
 
         $pageConfigs = ['myLayout' => 'horizontal'];
 
-        return view('content.admin.dashboard.contents.admin-dashboard-contents', ['pageConfigs' => $pageConfigs]);
+        return view('content.admin.contents.dashboard-content', ['pageConfigs' => $pageConfigs]);
     }
 }
