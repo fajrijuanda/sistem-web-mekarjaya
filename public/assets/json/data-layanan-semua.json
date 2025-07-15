@@ -1,0 +1,60 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nomor_surat": "474/001/VII/2025",
+      "jenis_layanan": "Surat Keterangan Usaha",
+      "pemohon": "Budi Santoso",
+      "tanggal": "15 Juli 2025",
+      "status": 2
+    },
+    {
+      "id": 2,
+      "nomor_surat": "475/002/VII/2025",
+      "jenis_layanan": "Permohonan Surat Pindah",
+      "pemohon": "Siti Aminah",
+      "tanggal": "15 Juli 2025",
+      "status": 2
+    },
+    {
+      "id": 3,
+      "nomor_surat": "470/003/VII/2025",
+      "jenis_layanan": "Surat Keterangan Tidak Mampu",
+      "pemohon": "Asep Sunandar",
+      "tanggal": "14 Juli 2025",
+      "status": 1
+    },
+    {
+      "id": 4,
+      "nomor_surat": "640/004/VII/2025",
+      "jenis_layanan": "Izin Mendirikan Bangunan",
+      "pemohon": "Dewi Lestari",
+      "tanggal": "14 Juli 2025",
+      "status": 3
+    },
+    {
+      "id": 5,
+      "nomor_surat": "474/005/VII/2025",
+      "jenis_layanan": "Pembuatan Kartu Keluarga Baru",
+      "pemohon": "Joko Susilo",
+      "tanggal": "13 Juli 2025",
+      "status": 1
+    },
+    {
+      "id": 6,
+      "nomor_surat": "474.2/006/VII/2025",
+      "jenis_layanan": "Surat Pengantar Nikah",
+      "pemohon": "Rina Wati",
+      "tanggal": "13 Juli 2025",
+      "status": 1
+    },
+    {
+      "id": 7,
+      "nomor_surat": "470/005/VII/2025",
+      "jenis_layanan": "Rekomendasi Bantuan Sosial",
+      "pemohon": "Suparman",
+      "tanggal": "16 Juli 2025",
+      "status": 4
+    }
+  ]
+}

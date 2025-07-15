@@ -1,0 +1,58 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nama_dokumen": "Peraturan Desa No. 5 Tahun 2024.pdf",
+      "tipe_file": "pdf",
+      "kategori": "Peraturan Desa",
+      "nomor_surat": "140/005/2024",
+      "tanggal_unggah": "10 Januari 2025",
+      "ukuran_file": "1.2 MB"
+    },
+    {
+      "id": 2,
+      "nama_dokumen": "Sertifikat Tanah Kas Desa.pdf",
+      "tipe_file": "pdf",
+      "kategori": "Surat Tanah",
+      "nomor_surat": "",
+      "tanggal_unggah": "25 Februari 2025",
+      "ukuran_file": "5.4 MB"
+    },
+    {
+      "id": 3,
+      "nama_dokumen": "Notulen Musrenbangdes 2025.docx",
+      "tipe_file": "docx",
+      "kategori": "Notulen Rapat",
+      "nomor_surat": "",
+      "tanggal_unggah": "15 Maret 2025",
+      "ukuran_file": "256 KB"
+    },
+    {
+      "id": 4,
+      "nama_dokumen": "Data Penduduk Semester II 2024.xlsx",
+      "tipe_file": "spreadsheet",
+      "kategori": "Kependudukan",
+      "nomor_surat": "",
+      "tanggal_unggah": "02 April 2025",
+      "ukuran_file": "8.1 MB"
+    },
+    {
+      "id": 5,
+      "nama_dokumen": "Dokumentasi Kerja Bakti.jpg",
+      "tipe_file": "image",
+      "kategori": "Lainnya",
+      "nomor_surat": "",
+      "tanggal_unggah": "20 Mei 2025",
+      "ukuran_file": "3.2 MB"
+    },
+    {
+      "id": 6,
+      "nama_dokumen": "SK Pengangkatan Perangkat Desa.pdf",
+      "tipe_file": "pdf",
+      "kategori": "Peraturan Desa",
+      "nomor_surat": "141/001/SK/2025",
+      "tanggal_unggah": "05 Juni 2025",
+      "ukuran_file": "850 KB"
+    }
+  ]
+}

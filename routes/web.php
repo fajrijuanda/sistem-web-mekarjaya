@@ -161,10 +161,14 @@ use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\admin\dashboard\Main;
 use App\Http\Controllers\admin\dashboard\PublicService;
 use App\Http\Controllers\admin\dashboard\Content;
+use App\Http\Controllers\admin\administrasi\LayananSurat;
+use App\Http\Controllers\admin\administrasi\ArsipDokumen;
 // Main Page Route
 Route::get('/', [Main::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
 Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
+Route::get('/layanan', [LayananSurat::class, 'index'])->name('administrasi-layanan');
+Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale
