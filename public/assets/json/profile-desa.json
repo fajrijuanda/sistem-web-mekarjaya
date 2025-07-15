@@ -1,0 +1,122 @@
+{
+    "hero": {
+        "title": "Selamat Datang di Desa Mekarjaya",
+        "subtitle": "Kecamatan Kedungwaringin, Kabupaten Bekasi.\n\"Mewujudkan Masyarakat Mandiri Berbasis Potensi dan Kearifan Lokal Desa\".",
+        "image": "assets/img/gallery/sosialisasi-kkn.png"
+    },
+    "features": {
+        "section_title_badge": "Sekilas Info",
+        "section_title_main": "Informasi & Potensi Desa Mekarjaya",
+        "section_description": "Beberapa informasi mengenai kondisi geografis, sosial, dan potensi yang ada di Desa Mekarjaya.",
+        "items": [
+            {
+                "icon": "assets/img/front-pages/icons/laptop.png",
+                "title": "Geografi & Pertanian",
+                "description": "Wilayah Desa Mekarjaya didominasi oleh lahan pertanian. Para petani di wilayah ini membutuhkan dukungan pupuk untuk meningkatkan hasil panen."
+            },
+            {
+                "icon": "assets/img/front-pages/icons/user.png",
+                "title": "Kesehatan Masyarakat",
+                "description": "Terdapat 6 titik Posyandu yang menjadi pusat layanan kesehatan utama bagi warga di 3 dusun."
+            },
+            {
+                "icon": "assets/img/front-pages/icons/paper.png",
+                "title": "Pendidikan",
+                "description": "Desa Mekarjaya memiliki 1 unit Sekolah Menengah Atas (SMA) yang berlokasi di dusun Babakan."
+            },
+            {
+                "icon": "assets/img/front-pages/icons/rocket.png",
+                "title": "Sosial & Keagamaan",
+                "description": "Kegiatan sosial seperti gotong royong rutin dilaksanakan. Desa ini memiliki 4 masjid dan 16 kelompok majelis ta'lim yang aktif."
+            },
+            {
+                "icon": "assets/img/front-pages/icons/check.png",
+                "title": "Aparatur Desa",
+                "description": "Struktur pemerintahan desa yang solid dan siap melayani kebutuhan masyarakat setiap saat."
+            },
+            {
+                "icon": "assets/img/front-pages/icons/keyboard.png",
+                "title": "Data Kependudukan",
+                "description": "Data kependudukan yang mencakup jumlah penduduk berdasarkan jenis kelamin dan usia telah terarsip dengan baik."
+            }
+        ]
+    },
+    "profile": {
+        "section_title_badge": "Profil Lengkap",
+        "section_title_main": "Mengenal Desa Mekarjaya",
+        "history_image": "assets/img/gallery/pusaka-karawang.jpg",
+        "history_title": "Sejarah Desa",
+        "history_paragraph_1": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur maximus turpis eu fringilla mollis. Sed quis lectus in nunc caudantium, vulputate enean id nisl ut massa auctor finibus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed et ullamcorper mi, nec laoreet justo.",
+        "history_paragraph_2": "Nulla facilisi. Duis tristique, lorem in iaculis consectetur, odio metus convallis eros, et accumsan leo justo et arcu.",
+        "vision_title": "Visi",
+        "vision_text": "\"TERWUJUDNYA DESA MEKARJAYA YANG AMAN, SEJAHTERA, DAN MANDIRI MELALUI OPTIMALISASI POTENSI LOKAL DAN SUMBER DAYA MANUSIA YANG BERKUALITAS\"",
+        "mission_title": "Misi Kami",
+        "mission_description": "Langkah-langkah strategis untuk mencapai visi Desa Mekarjaya.",
+        "missions": [
+            {
+                "icon": "ti ti-users",
+                "title": "Peningkatan Pelayanan",
+                "description": "Meningkatkan kualitas pelayanan publik yang cepat, transparan, dan akuntabel."
+            },
+            {
+                "icon": "ti ti-plant-2",
+                "title": "Pemberdayaan Ekonomi",
+                "description": "Mengembangkan potensi ekonomi lokal, khususnya di bidang pertanian dan UMKM."
+            },
+            {
+                "icon": "ti ti-road",
+                "title": "Pembangunan Infrastruktur",
+                "description": "Melanjutkan pembangunan infrastruktur desa yang merata dan berkelanjutan."
+            },
+            {
+                "icon": "ti ti-school",
+                "title": "Kualitas SDM",
+                "description": "Meningkatkan kualitas sumber daya manusia melalui program pendidikan dan kesehatan."
+            },
+            {
+                "icon": "ti ti-heart-handshake",
+                "title": "Kearifan Lokal",
+                "description": "Menjaga dan melestarikan nilai-nilai sosial, budaya, dan kearifan lokal."
+            },
+            {
+                "icon": "ti ti-leaf",
+                "title": "Lingkungan Hidup",
+                "description": "Menciptakan lingkungan desa yang bersih, sehat, dan nyaman bagi seluruh warga."
+            }
+        ]
+    },
+    "government": {
+        "section_title_badge": "Pemerintahan",
+        "section_title_main": "Struktur Pemerintahan Desa",
+        "section_description": "Aparatur yang berdedikasi untuk melayani Desa Mekarjaya.",
+        "members": [
+            {
+                "image": "assets/img/front-pages/landing-page/team-member-1.png",
+                "name": "Nama Kepala Desa",
+                "position": "Kepala Desa"
+            },
+            {
+                "image": "assets/img/front-pages/landing-page/team-member-2.png",
+                "name": "Nama Sekretaris",
+                "position": "Sekretaris Desa"
+            },
+            {
+                "image": "assets/img/front-pages/landing-page/team-member-3.png",
+                "name": "Nama Kaur",
+                "position": "Kaur Pemerintahan"
+            },
+            {
+                "image": "assets/img/front-pages/landing-page/team-member-4.png",
+                "name": "Nama Kadus",
+                "position": "Kepala Dusun 1"
+            }
+        ]
+    },
+    "contact": {
+        "section_title_badge": "Hubungi Kami",
+        "section_title_main": "Kirimkan Pesan",
+        "section_description": "Ada pertanyaan atau masukan? Jangan ragu untuk menulis pesan kepada kami.",
+        "email": "kontak@mekarjaya.desa.id",
+        "phone": "+62 123 456 789"
+    }
+}

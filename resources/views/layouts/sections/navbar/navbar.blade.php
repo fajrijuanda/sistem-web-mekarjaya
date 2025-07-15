@@ -443,14 +443,14 @@ $navbarDetached = ($navbarDetached ?? '');
                   </a>
                 </li>
               @endif
-              <li>
+              {{-- <li>
                 <a class="dropdown-item" href="{{url('pages/account-settings-billing')}}">
                   <span class="d-flex align-items-center align-middle">
                     <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span class="flex-grow-1 align-middle">Billing</span>
                     <span class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
                   </span>
                 </a>
-              </li>
+              </li> --}}
 
               @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
                 <li>
@@ -513,7 +513,7 @@ $navbarDetached = ($navbarDetached ?? '');
               @else
                 <li>
                   <div class="d-grid px-2 pt-2 pb-1">
-                    <a class="btn btn-sm btn-danger d-flex" href="{{ Route::has('login') ? route('login') : url('auth/login-basic') }}">
+                    <a class="btn btn-sm btn-danger d-flex" href="{{ Route::has('login') ? route('login') : url('auth/login') }}">
                       <small class="align-middle">Login</small>
                       <i class="ti ti-login ms-2 ti-14px"></i>
                     </a>

@@ -76,10 +76,10 @@
       "slug": "profil-desa",
       "submenu": [
         {
-          "url": "profil/identitas",
-          "name": "Identitas Desa",
+          "url": "profil/desa",
+          "name": "Website Desa",
           "icon": "menu-icon tf-icons ti ti-id",
-          "slug": "profil-desa-identitas"
+          "slug": "profil-desa-website"
         },
         {
           "url": "profil/sejarah",

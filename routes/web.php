@@ -79,7 +79,7 @@ use App\Http\Controllers\pages\MiscUnderMaintenance;
 use App\Http\Controllers\pages\MiscComingSoon;
 use App\Http\Controllers\pages\MiscNotAuthorized;
 use App\Http\Controllers\authentications\LoginBasic;
-use App\Http\Controllers\authentications\LoginCover;
+use App\Http\Controllers\authentications\Login;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\authentications\RegisterCover;
 use App\Http\Controllers\authentications\RegisterMultiSteps;
@@ -164,6 +164,7 @@ use App\Http\Controllers\admin\dashboard\Content;
 use App\Http\Controllers\admin\administrasi\LayananSurat;
 use App\Http\Controllers\admin\administrasi\ArsipDokumen;
 use App\Http\Controllers\admin\content\Artikel;
+use App\Http\Controllers\admin\content\ProfileDesa;
 // Main Page Route
 Route::get('/', [Main::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
@@ -174,6 +175,13 @@ Route::get('/artikel', [Artikel::class, 'index'])->name('artikel-list');
 
 Route::get('/artikel/create', [Artikel::class, 'create'])->name('artikel-create');
 Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('artikel-view');
+// artikel edit
+Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('artikel-edit');
+
+
+// profile desa
+Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('profil-desa-website');
+Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('profil-desa-update');
 // create artikel
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
@@ -263,8 +271,8 @@ Route::get('/pages/misc-comingsoon', [MiscComingSoon::class, 'index'])->name('pa
 Route::get('/pages/misc-not-authorized', [MiscNotAuthorized::class, 'index'])->name('pages-misc-not-authorized');
 
 // authentication
-Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
-Route::get('/auth/login-cover', [LoginCover::class, 'index'])->name('auth-login-cover');
+// Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
+Route::get('/auth/login', [Login::class, 'index'])->name('auth-login');
 Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
 Route::get('/auth/register-cover', [RegisterCover::class, 'index'])->name('auth-register-cover');
 Route::get('/auth/register-multisteps', [RegisterMultiSteps::class, 'index'])->name('auth-register-multisteps');
