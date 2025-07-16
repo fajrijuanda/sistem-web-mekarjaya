@@ -1,3 +1,5 @@
+// resources/assets/js/user-management.js
+
 /**
  * Page User List
  */
@@ -6,6 +8,12 @@
 
 // Datatable (jquery)
 $(function () {
+  // Variabel global untuk role user yang sedang login.
+  // Anda perlu memastikan variabel ini tersedia dari Blade file Anda.
+  // Contoh: const currentUserRole = "{{ auth()->user()->role ?? 'guest' }}";
+  // Ganti 'guest' dengan role default jika user tidak login.
+  const currentUserRole = 'superadmin'; // <-- GANTI DENGAN ROLE USER YANG SEDANG LOGIN DARI BACKEND ANDA!
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -42,6 +50,7 @@ $(function () {
         { data: 'name' },
         { data: 'email' },
         { data: 'email_verified_at' },
+        { data: 'role' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -123,25 +132,72 @@ $(function () {
           }
         },
         {
+          // User Role
+          targets: 5,
+          render: function (data, type, full, meta) {
+            var role = full['role'];
+            var iconClass = '';
+            var roleName = '';
+
+            // Tentukan ikon dan nama tampilan berdasarkan role
+            switch (role) {
+              case 'superadmin':
+                iconClass = 'ti-crown text-warning';
+                roleName = 'Super Admin';
+                break;
+              case 'admin-pelayanan':
+                iconClass = 'ti-users text-info';
+                roleName = 'Admin Pelayanan';
+                break;
+              case 'admin-konten':
+                iconClass = 'ti-pencil text-primary';
+                roleName = 'Admin Konten';
+                break;
+              default: // Role 'user' atau role lainnya
+                iconClass = 'ti-user text-secondary';
+                roleName = 'User';
+            }
+
+            return `<span class="d-flex align-items-center text-capitalize"><i class="ti ${iconClass} me-2"></i>${roleName}</span>`;
+          }
+        },
+        {
           // Actions
           targets: -1,
           title: 'Actions',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ti ti-edit"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="ti ti-trash"></i></button>` +
+            const rowRole = full['role']; // Role dari baris yang sedang dirender
+            let actionsHtml = '';
+
+            // Cek jika role baris BUKAN 'user' ATAU jika user yang login adalah 'superadmin' (atau role lain yang punya izin khusus)
+            // Dalam kasus Anda, semua role selain 'user' bisa diedit, tapi 'user' tidak bisa diedit oleh siapapun.
+            // Jika Anda ingin superadmin bisa edit user, logika di sini perlu diubah.
+            // Contoh: if (currentUserRole === 'superadmin' || rowRole !== 'user')
+            // Berdasarkan permintaan Anda: "super admin ataupun yang lain tidak bisa melakukan edit pada akun dengan role user"
+            if (rowRole !== 'user') {
+              // Jika role baris BUKAN 'user', tampilkan tombol edit/delete
+              actionsHtml +=
+                `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ti ti-edit"></i></button>` +
+                `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="ti ti-trash"></i></button>`;
+            } else {
+              // Jika role adalah 'user', Anda bisa menampilkan tombol nonaktif atau pesan
+              // Contoh: actionsHtml += '<span class="text-muted">No actions</span>';
+              // Atau sembunyikan sepenuhnya jika tidak ada aksi lain
+            }
+
+            // Bagian dropdown lainnya (View, Suspend) mungkin masih relevan
+            actionsHtml +=
               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
               '" class="dropdown-item">View</a>' +
               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+              '</div>';
+
+            return '<div class="d-flex align-items-center gap-50">' + actionsHtml + '</div>';
           }
         }
       ],
@@ -180,7 +236,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -198,7 +253,6 @@ $(function () {
                 }
               },
               customize: function (win) {
-                //customize print view for dark
                 $(win.document.body)
                   .css('color', config.colors.headingColor)
                   .css('border-color', config.colors.borderColor)
@@ -218,7 +272,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -243,7 +296,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -268,7 +320,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -293,7 +344,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -362,6 +412,21 @@ $(function () {
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
+    var rowData = dt_user.row($(this).parents('tr')).data(); // Mendapatkan data baris
+    const rowRole = rowData['role'];
+
+    // Cek jika role baris adalah 'user', maka batalkan aksi delete
+    if (rowRole === 'user') {
+      Swal.fire({
+        title: 'Unauthorized!',
+        text: 'You cannot delete accounts with the role "User".',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+      return; // Hentikan eksekusi lebih lanjut
+    }
 
     // hide responsive modal in small screen
     if (dtrModal.length) {
@@ -420,6 +485,21 @@ $(function () {
   $(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
+    var rowData = dt_user.row($(this).parents('tr')).data(); // Mendapatkan data baris
+    const rowRole = rowData['role'];
+
+    // Cek jika role baris adalah 'user', maka batalkan aksi edit
+    if (rowRole === 'user') {
+      Swal.fire({
+        title: 'Unauthorized!',
+        text: 'You cannot edit accounts with the role "User".',
+        icon: 'error',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+      return; // Hentikan eksekusi lebih lanjut
+    }
 
     // hide responsive modal in small screen
     if (dtrModal.length) {
@@ -430,10 +510,11 @@ $(function () {
     $('#offcanvasAddUserLabel').html('Edit User');
 
     // get data
-    $.get(`${baseUrl}user-list\/${user_id}\/edit`, function (data) {
+    $.get(`${baseUrl}user-list/${user_id}/edit`, function (data) {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#user-role').val(data.role).trigger('change');
     });
   });
 
@@ -441,10 +522,10 @@ $(function () {
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Add User');
+    $('#user-role').val('').trigger('change');
   });
 
   // Filter form control to default size
-  // ? setTimeout used for multilingual table initialization
   setTimeout(() => {
     $('.dataTables_filter .form-control').removeClass('form-control-sm');
     $('.dataTables_length .form-select').removeClass('form-select-sm');
@@ -453,7 +534,6 @@ $(function () {
   // validating form and updating user's data
   const addNewUserForm = document.getElementById('addNewUserForm');
 
-  // user form validation
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
       name: {
@@ -470,6 +550,13 @@ $(function () {
           },
           emailAddress: {
             message: 'The value is not a valid email address'
+          }
+        }
+      },
+      role: {
+        validators: {
+          notEmpty: {
+            message: 'Please select a role'
           }
         }
       },
@@ -491,20 +578,15 @@ $(function () {
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
       bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
         eleValidClass: '',
         rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
           return '.mb-6';
         }
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
   }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
     $.ajax({
       data: $('#addNewUserForm').serialize(),
       url: `${baseUrl}user-list`,
@@ -513,7 +595,6 @@ $(function () {
         dt_user.draw();
         offCanvasForm.offcanvas('hide');
 
-        // sweetalert
         Swal.fire({
           icon: 'success',
           title: `Successfully ${status}!`,
@@ -526,8 +607,8 @@ $(function () {
       error: function (err) {
         offCanvasForm.offcanvas('hide');
         Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
+          title: 'Error!',
+          text: err.responseJSON.message || 'An error occurred.',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -537,14 +618,12 @@ $(function () {
     });
   });
 
-  // clearing form data when offcanvas hidden
   offCanvasForm.on('hidden.bs.offcanvas', function () {
     fv.resetForm(true);
   });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');
 
-  // Phone Number
   if (phoneMaskList) {
     phoneMaskList.forEach(function (phoneMask) {
       new Cleave(phoneMask, {

@@ -83,8 +83,8 @@ use App\Http\Controllers\authentications\Login;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\authentications\Register;
 use App\Http\Controllers\authentications\RegisterMultiSteps;
-use App\Http\Controllers\authentications\VerifyEmailBasic;
-use App\Http\Controllers\authentications\VerifyEmailCover;
+// use App\Http\Controllers\authentications\VerifyEmailBasic;
+use App\Http\Controllers\authentications\VerifyEmail;
 use App\Http\Controllers\authentications\ResetPasswordBasic;
 use App\Http\Controllers\authentications\ResetPassword;
 use App\Http\Controllers\authentications\ForgotPasswordBasic;
@@ -165,11 +165,21 @@ use App\Http\Controllers\admin\administrasi\LayananSurat;
 use App\Http\Controllers\admin\administrasi\ArsipDokumen;
 use App\Http\Controllers\admin\content\Artikel;
 use App\Http\Controllers\admin\content\ProfileDesa;
+use Illuminate\Support\Facades\Auth;
 // Main Page Route
 // Route untuk menampilkan halaman login
 
+// --- 1. Public Content Routes (Bisa diakses siapa saja, dengan atau tanpa login) ---
+
+// Route utama '/' akan mengarah ke public profile-desa
+Route::get('/', [ProfileDesa::class, 'publicIndex'])->name('public.profile-desa');
+
+// Artikel (Public List/View)
+Route::get('/artikel', [Artikel::class, 'publicIndex'])->name('public.artikel-list');
+Route::get('/artikel/{slug}', [Artikel::class, 'publicShow'])->name('public.artikel-view');
+
+// --- 2. Guest Routes (Hanya bisa diakses jika belum login) ---
 Route::middleware('guest')->group(function () {
-    Route::get('/', [Login::class, 'index'])->name('login');
     // Login
     Route::get('/login', [Login::class, 'index'])->name('login');
     Route::post('/login', [Login::class, 'authenticate'])->name('login.authenticate');
@@ -185,28 +195,60 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [ResetPassword::class, 'reset'])->name('password.update');
 });
 
+// --- 3. Authenticated Routes (Membutuhkan login) ---
 Route::middleware('auth')->group(function () {
+    // Logout
     Route::post('/logout', [Login::class, 'logout'])->name('logout');
+
+    // Email Verification Routes (Perlu autentikasi untuk memicu/melihat)
+    Route::get('/verify-email', [VerifyEmail::class, 'index'])
+        ->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmail::class, 'verify'])
+        ->middleware('signed') // 'auth' sudah di group ini
+        ->name('verification.verify');
+
+    Route::post('/email/resend-verification', [VerifyEmail::class, 'resend'])
+        ->middleware('throttle:6,1') // 'auth' sudah di group ini
+        ->name('verification.send');
+
+    // Dashboard utama setelah login
+    // Ini adalah dashboard untuk admin atau user biasa setelah login
+    Route::get('/dashboard', function () {
+        // Jika user adalah role 'user' DAN belum terverifikasi, redirect ke halaman verifikasi
+        if (Auth::user()->role === 'user' && (is_null(Auth::user()->email_verified_at) || !Auth::user()->email_verified_at)) {
+            return redirect()->route('verification.notice');
+        }
+        return view('content.admin.contents.pages.profile-desa');
+    })->name('dashboard');
+
+    // Dashboard spesifik berdasarkan role (jika diperlukan)
     Route::get('/dashboard/utama', [Main::class, 'index'])->name('dashboard-utama');
     Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
     Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
+
+    // Administrasi
     Route::get('/layanan', [LayananSurat::class, 'index'])->name('administrasi-layanan');
     Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
-    Route::get('/artikel', [Artikel::class, 'index'])->name('artikel-list');
 
-    Route::get('/artikel/create', [Artikel::class, 'create'])->name('artikel-create');
-    Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('artikel-view');
-    // artikel edit
-    Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('artikel-edit');
+    // Konten Website (Admin)
+    Route::prefix('admin')->group(function () { // Mengelompokkan routes admin dengan prefix 'admin'
+        // Artikel Admin (CRUD)
+        Route::get('/artikel', [Artikel::class, 'index'])->name('admin.artikel-list'); // Diubah menjadi /admin/artikel
+        Route::get('/artikel/create', [Artikel::class, 'create'])->name('admin.artikel-create');
+        Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('admin.artikel-view'); // Admin view detail
+        Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('admin.artikel-edit');
 
-    // profile desa
-    Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('profil-desa-website');
-    Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('profil-desa-update');
-    
-    // user management
+        // Profile Desa Admin (CRUD)
+        Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('admin.profil-desa-website'); // Diubah menjadi /admin/profil/desa
+        Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('admin.profil-desa-update');
+    });
+
+    // User Management
     Route::get('/user-management', [UserManagement::class, 'UserManagement'])->name('user-management');
     Route::resource('/user-list', UserManagement::class);
 });
+
 // create artikel
 // Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 // Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
@@ -301,8 +343,8 @@ Route::get('/pages/misc-not-authorized', [MiscNotAuthorized::class, 'index'])->n
 // Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
 // Route::get('/auth/register-cover', [RegisterCover::class, 'index'])->name('auth-register-cover');
 Route::get('/auth/register-multisteps', [RegisterMultiSteps::class, 'index'])->name('auth-register-multisteps');
-Route::get('/auth/verify-email-basic', [VerifyEmailBasic::class, 'index'])->name('auth-verify-email-basic');
-Route::get('/auth/verify-email-cover', [VerifyEmailCover::class, 'index'])->name('auth-verify-email-cover');
+// Route::get('/auth/verify-email-basic', [VerifyEmailBasic::class, 'index'])->name('auth-verify-email-basic');
+// Route::get('/auth/verify-email-cover', [VerifyEmailCover::class, 'index'])->name('auth-verify-email-cover');
 Route::get('/auth/reset-password-basic', [ResetPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
 // Route::get('/auth/reset-password-cover', [ResetPasswordCover::class, 'index'])->name('auth-reset-password-cover');
 Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class UserManagement extends Controller
@@ -45,6 +48,7 @@ class UserManagement extends Controller
       2 => 'name',
       3 => 'email',
       4 => 'email_verified_at',
+      5 => 'role', // Tambahkan kolom role
     ];
 
     $search = [];
@@ -69,6 +73,7 @@ class UserManagement extends Controller
       $users = User::where('id', 'LIKE', "%{$search}%")
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhere('role', 'LIKE', "%{$search}%") // Tambahkan pencarian berdasarkan role
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -77,6 +82,7 @@ class UserManagement extends Controller
       $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhere('role', 'LIKE', "%{$search}%") // Tambahkan pencarian berdasarkan role
         ->count();
     }
 
@@ -92,6 +98,7 @@ class UserManagement extends Controller
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email;
         $nestedData['email_verified_at'] = $user->email_verified_at;
+        $nestedData['role'] = $user->role; // Tambahkan data role
 
         $data[] = $nestedData;
       }
@@ -113,17 +120,6 @@ class UserManagement extends Controller
       ]);
     }
   }
-
-  /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  // public function create()
-  // {
-  //   //
-  // }
-
   /**
    * Store a newly created resource in storage.
    *
@@ -132,33 +128,50 @@ class UserManagement extends Controller
    */
   public function store(Request $request)
   {
-    $userID = $request->id;
+    try {
+      $userID = $request->id;
 
-    if ($userID) {
-      // update the value
-      $users = User::updateOrCreate(
-        ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email]
-      );
-
-      // user updated
-      return response()->json('Updated');
-    } else {
-      // create new one if email is unique
-      $userEmail = User::where('email', $request->email)->first();
-
-      if (empty($userEmail)) {
+      if ($userID) {
+        // Logika update - jika Anda menggunakan updateOrCreate di sini,
+        // pastikan semua field relevan di-handle.
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password' => bcrypt(Str::random(10))]
+          [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role // Memastikan role juga terupdate
+          ]
+        );
+        return response()->json('Updated');
+      } else {
+        // Validasi input untuk pembuatan user baru
+        $request->validate([
+          'name' => 'required|string|max:255',
+          'email' => 'required|email|max:255|unique:users,email',
+          'role' => 'required|string|in:superadmin,admin-pelayanan,admin-konten',
+        ]);
+
+        // Ambil nilai profile_photo_path dari request, atau gunakan default
+        $profilePhotoPath = $request->input('profile_photo_path', 'avatars/1.png');
+
+        // Buat user baru dengan password default, email_verified_at, dan profile_photo_path
+        $users = User::create(
+          [
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make('password123'), // Password default yang di-hash
+            'role' => $request->role, // Role dari input form
+            'email_verified_at' => Carbon::now(), // Mengisi dengan timestamp saat ini
+            'profile_photo_path' => $profilePhotoPath // Mengisi path foto profil
+          ]
         );
 
-        // user created
         return response()->json('Created');
-      } else {
-        // user already exist
-        return response()->json(['message' => "already exits"], 422);
       }
+    } catch (ValidationException $e) {
+      return response()->json(['errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+      return response()->json(['message' => 'Failed to create user', 'error' => $e->getMessage()], 500);
     }
   }
 
@@ -185,15 +198,47 @@ class UserManagement extends Controller
     return response()->json($user);
   }
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
   public function update(Request $request, $id)
   {
+    try {
+      // Validasi input
+      $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $id,
+        'role' => 'required|string|in:superadmin,admin-pelayanan,admin-konten', // Sesuaikan dengan roles yang valid
+        // 'password' => 'nullable|string|min:8|confirmed', // Jika mengizinkan update password
+      ]);
+
+      // Cari user berdasarkan ID
+      $user = User::find($id);
+
+      // Cek apakah user ditemukan
+      if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+      }
+
+      // Perbarui atribut user
+      $user->name = $request->name;
+      $user->email = $request->email;
+      $user->role = $request->role; // Tambahkan pembaruan role
+
+      // Jika Anda memiliki field password di form update, tangani di sini
+      // if ($request->filled('password')) {
+      //     $user->password = Hash::make($request->password);
+      // }
+
+      // Simpan perubahan
+      $user->save();
+
+      return response()->json(['message' => 'User updated successfully'], 200);
+
+    } catch (ValidationException $e) {
+      // Tangani error validasi
+      return response()->json(['errors' => $e->errors()], 422);
+    } catch (\Exception $e) {
+      // Tangani error lainnya (misalnya error database)
+      return response()->json(['message' => 'Failed to update user', 'error' => $e->getMessage()], 500);
+    }
   }
 
   /**
@@ -204,6 +249,24 @@ class UserManagement extends Controller
    */
   public function destroy($id)
   {
-    $users = User::where('id', $id)->delete();
+    try {
+      // Temukan pengguna berdasarkan ID
+      $user = User::find($id);
+
+      // Cek apakah pengguna ditemukan
+      if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+      }
+
+      // Hapus pengguna
+      $user->delete();
+
+      // Berikan respons sukses
+      return response()->json(['message' => 'User deleted successfully'], 200);
+
+    } catch (\Exception $e) {
+      // Tangani kesalahan jika terjadi masalah saat menghapus
+      return response()->json(['message' => 'Failed to delete user', 'error' => $e->getMessage()], 500);
+    }
   }
 }

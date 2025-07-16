@@ -39,7 +39,7 @@ $configData = Helper::appClasses();
         <p class="text-start mb-0">
           Account activation link sent to your email address: hello@example.com Please follow the link inside to continue.
         </p>
-        <a class="btn btn-primary w-100 my-6" href="{{url('/')}}">
+        <a class="btn btn-primary w-100 my-6" href="{{url('/login')}}">
           Skip for now
         </a>
         <p class="text-center mb-0">Didn't get the mail?

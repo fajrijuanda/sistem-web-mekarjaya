@@ -28,192 +28,10 @@ $activeClass = in_array($currentRouteName, $activeRoutes) ? 'active' : '';
         </button>
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link fw-medium" aria-current="page" href="{{url('front-pages/landing')}}#landingHero">Home</a>
+            <a class="nav-link fw-medium" aria-current="page" href="{{url('/')}}">Profile Desa</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link fw-medium" href="{{url('front-pages/landing')}}#landingFeatures">Features</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link fw-medium" href="{{url('front-pages/landing')}}#landingTeam">Team</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link fw-medium" href="{{url('front-pages/landing')}}#landingFAQ">FAQ</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link fw-medium" href="{{url('front-pages/landing')}}#landingContact">Contact us</a>
-          </li>
-          <li class="nav-item mega-dropdown {{ $activeClass }}">
-            <a href="javascript:void(0);" class="nav-link dropdown-toggle navbar-ex-14-mega-dropdown mega-dropdown fw-medium" aria-expanded="false" data-bs-toggle="mega-dropdown" data-trigger="hover">
-              <span>Pages</span>
-            </a>
-            <div class="dropdown-menu p-4 p-xl-8">
-              <div class="row gy-4">
-                <div class="col-12 col-lg">
-                  <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                    <div class="avatar flex-shrink-0 me-3">
-                      <span class="avatar-initial rounded bg-label-primary"><i class='ti ti-layout-grid ti-lg'></i></span>
-                    </div>
-                    <span class="ps-1">Other</span>
-                  </div>
-                  <ul class="nav flex-column">
-                    <li class="nav-item {{ $currentRouteName === 'front-pages-pricing' ? 'active' : '' }}">
-                      <a class="nav-link mega-dropdown-link" href="{{ url('front-pages/pricing') }}">
-                        <i class='ti ti-circle me-1'></i>
-                        <span>Pricing</span>
-                      </a>
-                    </li>
-                    <li class="nav-item {{ $currentRouteName === 'front-pages-payment' ? 'active' : '' }}">
-                      <a class="nav-link mega-dropdown-link" href="{{ url('front-pages/payment') }}">
-                        <i class='ti ti-circle me-1'></i>
-                        <span>Payment</span>
-                      </a>
-                    </li>
-                    <li class="nav-item {{ $currentRouteName === 'front-pages-checkout' ? 'active' : '' }}">
-                      <a class="nav-link mega-dropdown-link" href="{{ url('front-pages/checkout') }}">
-                        <i class='ti ti-circle me-1'></i>
-                        <span>Checkout</span>
-                      </a>
-                    </li>
-                    <li class="nav-item {{ $currentRouteName === 'front-pages-help-center' ? 'active' : '' }}">
-                      <a class="nav-link mega-dropdown-link" href="{{ url('front-pages/help-center') }}">
-                        <i class='ti ti-circle me-1'></i>
-                        <span>Help Center</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-12 col-lg">
-                  <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                    <div class="avatar flex-shrink-0 me-3">
-                      <span class="avatar-initial rounded bg-label-primary"><i class='ti ti-lock-open ti-lg'></i></span>
-                    </div>
-                    <span class="ps-1">Auth Demo</span>
-                  </div>
-                  <ul class="nav flex-column">
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/login-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Login (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/login-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Login (Cover)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/register-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Register (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/register-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Register (Cover)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/register-multisteps')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Register (Multi-steps)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/forgot-password-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Forgot Password (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/forgot-password-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Forgot Password (Cover)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/reset-password-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Reset Password (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/reset-password-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Reset Password (Cover)
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-12 col-lg">
-                  <div class="h6 d-flex align-items-center mb-3 mb-lg-5">
-                    <div class="avatar flex-shrink-0 me-3">
-                      <span class="avatar-initial rounded bg-label-primary"><i class='ti ti-file-analytics ti-lg'></i></span>
-                    </div>
-                    <span class="ps-1">Other</span>
-                  </div>
-                  <ul class="nav flex-column">
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/pages/misc-error')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Error
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/pages/misc-under-maintenance')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Under Maintenance
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/pages/misc-comingsoon')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Coming Soon
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/pages/misc-not-authorized')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Not Authorized
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/verify-email-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Verify Email (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/verify-email-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Verify Email (Cover)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/two-steps-basic')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Two Steps (Basic)
-                      </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link mega-dropdown-link" href="{{url('/auth/two-steps-cover')}}" target="_blank">
-                        <i class='ti ti-circle me-1'></i>
-                        Two Steps (Cover)
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-                <div class="col-lg-4 d-none d-lg-block">
-                  <div class="bg-body nav-img-col p-2">
-                    <img src="{{asset('assets/img/front-pages/misc/nav-item-col-img.png')}}" alt="nav item col image" class="w-100">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link fw-medium" href="{{url('/')}}" target="_blank">Admin</a>
+            <a class="nav-link fw-medium" href="{{url('/artikel')}}">Artikel</a>
           </li>
         </ul>
       </div>
@@ -221,7 +39,7 @@ $activeClass = in_array($currentRouteName, $activeRoutes) ? 'active' : '';
       <!-- Menu wrapper: End -->
       <!-- Toolbar: Start -->
       <ul class="navbar-nav flex-row align-items-center ms-auto">
-        @if($configData['hasCustomizer'] == true)
+        {{-- @if($configData['hasCustomizer'] == true)
         <!-- Style Switcher -->
         <li class="nav-item dropdown-style-switcher dropdown me-2 me-xl-1">
           <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -246,10 +64,10 @@ $activeClass = in_array($currentRouteName, $activeRoutes) ? 'active' : '';
           </ul>
         </li>
         <!-- / Style Switcher-->
-        @endif
+        @endif --}}
         <!-- navbar button: Start -->
         <li>
-          <a href="{{url('/auth/login-cover')}}" class="btn btn-primary" target="_blank"><span class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span><span class="d-none d-md-block">Login/Register</span></a>
+          <a href="{{url('/login')}}" class="btn btn-primary" target="_blank"><span class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span><span class="d-none d-md-block">Login/Register</span></a>
         </li>
         <!-- navbar button: End -->
       </ul>

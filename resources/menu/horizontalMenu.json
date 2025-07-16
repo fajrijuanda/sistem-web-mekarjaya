@@ -4,28 +4,42 @@
       "name": "Dashboards",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "dashboard",
-      "roles": ["superadmin", "admin-pelayanan", "admin-konten"],
+      "roles": [
+        "superadmin",
+        "admin-pelayanan",
+        "admin-konten"
+      ],
       "submenu": [
         {
           "url": "dashboard/utama",
           "name": "Utama",
           "icon": "menu-icon tf-icons ti ti-chart-pie-2",
           "slug": "dashboard-utama",
-          "roles": ["superadmin", "admin-pelayanan", "admin-konten"]
+          "roles": [
+            "superadmin",
+            "admin-pelayanan",
+            "admin-konten"
+          ]
         },
         {
           "url": "dashboard/pelayanan",
           "name": "Pelayanan Publik",
           "icon": "menu-icon tf-icons ti ti-file-text",
           "slug": "dashboard-pelayanan",
-          "roles": ["superadmin", "admin-pelayanan"]
+          "roles": [
+            "superadmin",
+            "admin-pelayanan"
+          ]
         },
         {
           "url": "dashboard/konten",
           "name": "Konten & Website",
           "icon": "menu-icon tf-icons ti ti-news",
           "slug": "dashboard-konten",
-          "roles": ["superadmin", "admin-konten"]
+          "roles": [
+            "superadmin",
+            "admin-konten"
+          ]
         }
       ]
     },
@@ -33,50 +47,71 @@
       "name": "Administrasi",
       "icon": "menu-icon tf-icons ti ti-files",
       "slug": "administrasi",
-      "roles": ["superadmin", "admin-pelayanan"],
+      "roles": [
+        "superadmin",
+        "admin-pelayanan"
+      ],
       "submenu": [
         {
           "url": "layanan",
           "name": "Layanan Surat",
           "icon": "menu-icon tf-icons ti ti-mail",
           "slug": "administrasi-layanan",
-          "roles": ["superadmin", "admin-pelayanan"]
+          "roles": [
+            "superadmin",
+            "admin-pelayanan"
+          ]
         },
         {
           "url": "arsip",
           "name": "Arsip Dokumen",
           "icon": "menu-icon tf-icons ti ti-archive",
           "slug": "administrasi-arsip",
-          "roles": ["superadmin", "admin-pelayanan"]
+          "roles": [
+            "superadmin",
+            "admin-pelayanan"
+          ]
         }
       ]
     },
     {
       "name": "Konten Website",
       "icon": "menu-icon tf-icons ti ti-news",
-      "slug": "artikel",
-      "roles": ["superadmin", "admin-konten"],
+      "slug": "admin-konten-website",
+      "roles": [
+        "superadmin",
+        "admin-konten"
+      ],
       "submenu": [
         {
-          "url": "artikel",
+          "url": "admin/artikel",
           "name": "Semua Artikel",
           "icon": "menu-icon tf-icons ti ti-list-details",
-          "slug": "artikel-list",
-          "roles": ["superadmin", "admin-konten"]
+          "slug": "admin.artikel-list",
+          "roles": [
+            "superadmin",
+            "admin-konten"
+          ]
         },
         {
-          "url": "artikel/create",
+          "url": "admin/artikel/create",
           "name": "Tambah Baru",
           "icon": "menu-icon tf-icons ti ti-plus",
-          "slug": "artikel-create",
-          "roles": ["superadmin", "admin-konten"]
+          "slug": "admin.artikel-create",
+          "roles": [
+            "superadmin",
+            "admin-konten"
+          ]
         },
         {
-          "url": "profil/desa",
-          "name": "Profil Desa",
+          "url": "admin/profil/desa",
+          "name": "Profil Desa Admin",
           "icon": "menu-icon tf-icons ti ti-id",
-          "slug": "profil-desa-website",
-          "roles": ["superadmin", "admin-konten"]
+          "slug": "admin.profil-desa-website",
+          "roles": [
+            "superadmin",
+            "admin-konten"
+          ]
         }
       ]
     },
@@ -84,16 +119,42 @@
       "name": "Manajemen Sistem",
       "icon": "menu-icon tf-icons ti ti-settings",
       "slug": "pengguna",
-      "roles": ["superadmin"],
+      "roles": [
+        "superadmin"
+      ],
       "submenu": [
         {
           "url": "user-management",
           "name": "Manajemen Pengguna",
           "icon": "menu-icon tf-icons ti ti-user-cog",
           "slug": "user-management",
-          "roles": ["superadmin"]
+          "roles": [
+            "superadmin"
+          ]
         }
       ]
+    },
+    {
+      "name": "Profile Desa",
+      "icon": "menu-icon tf-icons ti ti-id",
+      "url": "/",
+      "roles": [
+        "user",
+        "guest"
+      ],
+      "slug": "public.profile-desa"
+    },
+    {
+      "name": "Artikel",
+      "icon": "menu-icon tf-icons ti ti-list-details",
+      "url": "artikel",
+      "roles": [
+        "user",
+        "guest"
+      ],
+      "slug": "public.artikel-list"
     }
   ]
 }
+
+   
