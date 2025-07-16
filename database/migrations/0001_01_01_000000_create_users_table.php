@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('user'); // Default role, can be changed as needed
+            $table->string('profile_photo_path', 2048)->nullable()->after('password');
             $table->rememberToken();
             $table->timestamps();
         });

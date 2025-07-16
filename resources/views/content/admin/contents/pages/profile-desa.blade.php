@@ -19,7 +19,7 @@
 @endsection
 
 @section('page-script')
-    @vite(['resources/assets/js/front-page-landing.js'])
+    @vite(['resources/assets/js/profile-desa.js'])
 @endsection
 
 @push('page-style')
@@ -472,7 +472,7 @@
     </div>
 
     @auth
-        <form id="saveProfileForm" method="POST" action="{{ route('admin.profil-desa.update') }}"
+        <form id="saveProfileForm" method="POST" action="{{ route('profil-desa-update') }}"
             enctype="multipart/form-data" style="display: none;">
             @csrf
             @method('PUT')

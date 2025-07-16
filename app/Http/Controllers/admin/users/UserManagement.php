@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\laravel_example;
+namespace App\Http\Controllers\admin\users;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -23,12 +23,13 @@ class UserManagement extends Controller
     $notVerified = User::whereNull('email_verified_at')->get()->count();
     $usersUnique = $users->unique(['email']);
     $userDuplicates = $users->diff($usersUnique)->count();
-
-    return view('content.laravel-example.user-management', [
+    $pageConfigs = ['myLayout' => 'horizontal'];
+    return view('content.admin.users.user-management', [
       'totalUser' => $userCount,
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
+      'pageConfigs' => $pageConfigs
     ]);
   }
 
@@ -118,10 +119,10 @@ class UserManagement extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function create()
-  {
-    //
-  }
+  // public function create()
+  // {
+  //   //
+  // }
 
   /**
    * Store a newly created resource in storage.
@@ -167,10 +168,10 @@ class UserManagement extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function show($id)
-  {
-    //
-  }
+  // public function show($id)
+  // {
+  //   //
+  // }
 
   /**
    * Show the form for editing the specified resource.

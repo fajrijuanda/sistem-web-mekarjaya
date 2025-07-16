@@ -1,28 +1,31 @@
 {
   "menu": [
-   
     {
       "name": "Dashboards",
       "icon": "menu-icon tf-icons ti ti-smart-home",
       "slug": "dashboard",
+      "roles": ["superadmin", "admin-pelayanan", "admin-konten"],
       "submenu": [
         {
-          "url": "/",
+          "url": "dashboard/utama",
           "name": "Utama",
           "icon": "menu-icon tf-icons ti ti-chart-pie-2",
-          "slug": "dashboard-analytics"
+          "slug": "dashboard-utama",
+          "roles": ["superadmin", "admin-pelayanan", "admin-konten"]
         },
         {
           "url": "dashboard/pelayanan",
           "name": "Pelayanan Publik",
           "icon": "menu-icon tf-icons ti ti-file-text",
-          "slug": "dashboard-pelayanan"
+          "slug": "dashboard-pelayanan",
+          "roles": ["superadmin", "admin-pelayanan"]
         },
         {
           "url": "dashboard/konten",
           "name": "Konten & Website",
           "icon": "menu-icon tf-icons ti ti-news",
-          "slug": "dashboard-konten"
+          "slug": "dashboard-konten",
+          "roles": ["superadmin", "admin-konten"]
         }
       ]
     },
@@ -30,99 +33,65 @@
       "name": "Administrasi",
       "icon": "menu-icon tf-icons ti ti-files",
       "slug": "administrasi",
+      "roles": ["superadmin", "admin-pelayanan"],
       "submenu": [
         {
           "url": "layanan",
           "name": "Layanan Surat",
           "icon": "menu-icon tf-icons ti ti-mail",
-          "slug": "administrasi-layanan"
+          "slug": "administrasi-layanan",
+          "roles": ["superadmin", "admin-pelayanan"]
         },
         {
           "url": "arsip",
           "name": "Arsip Dokumen",
           "icon": "menu-icon tf-icons ti ti-archive",
-          "slug": "administrasi-arsip"
+          "slug": "administrasi-arsip",
+          "roles": ["superadmin", "admin-pelayanan"]
         }
       ]
     },
     {
-      "name": "Artikel Desa",
+      "name": "Konten Website",
       "icon": "menu-icon tf-icons ti ti-news",
       "slug": "artikel",
+      "roles": ["superadmin", "admin-konten"],
       "submenu": [
         {
           "url": "artikel",
           "name": "Semua Artikel",
           "icon": "menu-icon tf-icons ti ti-list-details",
-          "slug": "artikel-list"
+          "slug": "artikel-list",
+          "roles": ["superadmin", "admin-konten"]
         },
         {
           "url": "artikel/create",
           "name": "Tambah Baru",
           "icon": "menu-icon tf-icons ti ti-plus",
-          "slug": "artikel-create"
+          "slug": "artikel-create",
+          "roles": ["superadmin", "admin-konten"]
         },
-        {
-          "url": "artikel/kategori",
-          "name": "Kategori",
-          "icon": "menu-icon tf-icons ti ti-tag",
-          "slug": "artikel-kategori"
-        }
-      ]
-    },
-    {
-      "name": "Profil Desa",
-      "icon": "menu-icon tf-icons ti ti-building-community",
-      "slug": "profil-desa",
-      "submenu": [
         {
           "url": "profil/desa",
-          "name": "Website Desa",
+          "name": "Profil Desa",
           "icon": "menu-icon tf-icons ti ti-id",
-          "slug": "profil-desa-website"
-        },
-        {
-          "url": "profil/sejarah",
-          "name": "Sejarah Desa",
-          "icon": "menu-icon tf-icons ti ti-history",
-          "slug": "profil-desa-sejarah"
-        },
-        {
-          "url": "profil/visi-misi",
-          "name": "Visi & Misi",
-          "icon": "menu-icon tf-icons ti ti-target-arrow",
-          "slug": "profil-desa-visi-misi"
-        },
-        {
-          "url": "profil/pemerintahan",
-          "name": "Pemerintahan Desa",
-          "icon": "menu-icon tf-icons ti ti-hierarchy-2",
-          "slug": "profil-desa-pemerintahan"
-        },
-        {
-          "url": "profil/wilayah",
-          "name": "Wilayah Administratif",
-          "icon": "menu-icon tf-icons ti ti-map-2",
-          "slug": "profil-desa-wilayah"
+          "slug": "profil-desa-website",
+          "roles": ["superadmin", "admin-konten"]
         }
       ]
     },
     {
-      "name": "Pengguna",
-      "icon": "menu-icon tf-icons ti ti-users",
+      "name": "Manajemen Sistem",
+      "icon": "menu-icon tf-icons ti ti-settings",
       "slug": "pengguna",
+      "roles": ["superadmin"],
       "submenu": [
         {
-          "url": "users",
+          "url": "user-management",
           "name": "Manajemen Pengguna",
           "icon": "menu-icon tf-icons ti ti-user-cog",
-          "slug": "user-management"
-        },
-        {
-          "url": "roles",
-          "name": "Hak Akses",
-          "icon": "menu-icon tf-icons ti ti-shield-check",
-          "slug": "user-roles"
+          "slug": "user-management",
+          "roles": ["superadmin"]
         }
       ]
     }

@@ -65,7 +65,7 @@ $navbarDetached = ($navbarDetached ?? '');
           @endif
 
           <!-- Language -->
-          <li class="nav-item dropdown-language dropdown">
+          {{-- <li class="nav-item dropdown-language dropdown">
             <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
               <i class='ti ti-language rounded-circle ti-md'></i>
             </a>
@@ -91,7 +91,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 </a>
               </li>
             </ul>
-          </li>
+          </li> --}}
           <!--/ Language -->
 
           @if($configData['hasCustomizer'] == true)
@@ -122,7 +122,7 @@ $navbarDetached = ($navbarDetached ?? '');
           @endif
 
           <!-- Quick links  -->
-          <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
+          {{-- <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown">
             <a class="nav-link btn btn-text-secondary btn-icon rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <i class='ti ti-layout-grid-add ti-md'></i>
             </a>
@@ -200,11 +200,11 @@ $navbarDetached = ($navbarDetached ?? '');
                 </div>
               </div>
             </div>
-          </li>
+          </li> --}}
           <!-- Quick links -->
 
           <!-- Notification -->
-          <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
+          {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-2">
             <a class="nav-link btn btn-text-secondary btn-icon rounded-pill dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
               <span class="position-relative">
                 <i class="ti ti-bell ti-md"></i>
@@ -395,7 +395,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 </div>
               </li>
             </ul>
-          </li>
+          </li> --}}
           <!--/ Notification -->
 
           <!-- User -->
@@ -436,65 +436,6 @@ $navbarDetached = ($navbarDetached ?? '');
                 </a>
               </li>
 
-              @if (Auth::check() && Laravel\Jetstream\Jetstream::hasApiFeatures())
-                <li>
-                  <a class="dropdown-item" href="{{ route('api-tokens.index') }}">
-                    <i class="ti ti-key ti-md me-3"></i><span class="align-middle">API Tokens</span>
-                  </a>
-                </li>
-              @endif
-              {{-- <li>
-                <a class="dropdown-item" href="{{url('pages/account-settings-billing')}}">
-                  <span class="d-flex align-items-center align-middle">
-                    <i class="flex-shrink-0 ti ti-file-dollar me-3 ti-md"></i><span class="flex-grow-1 align-middle">Billing</span>
-                    <span class="flex-shrink-0 badge bg-danger d-flex align-items-center justify-content-center">4</span>
-                  </span>
-                </a>
-              </li> --}}
-
-              @if (Auth::User() && Laravel\Jetstream\Jetstream::hasTeamFeatures())
-                <li>
-                  <div class="dropdown-divider my-1 mx-n2"></div>
-                </li>
-                <li>
-                  <h6 class="dropdown-header">Manage Team</h6>
-                </li>
-                <li>
-                  <div class="dropdown-divider my-1 mx-n2"></div>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="{{ Auth::user() ? route('teams.show', Auth::user()->currentTeam->id) : 'javascript:void(0)' }}">
-                    <i class="ti ti-settings ti-md me-3"></i><span class="align-middle">Team Settings</span>
-                  </a>
-                </li>
-                @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                  <li>
-                    <a class="dropdown-item" href="{{ route('teams.create') }}">
-                      <i class="ti ti-user ti-md me-3"></i><span class="align-middle">Create New Team</span>
-                    </a>
-                  </li>
-                @endcan
-
-                @if (Auth::user()->allTeams()->count() > 1)
-                  <li>
-                    <div class="dropdown-divider my-1 mx-n2"></div>
-                  </li>
-                  <li>
-                    <h6 class="dropdown-header">Switch Teams</h6>
-                  </li>
-                  <li>
-                    <div class="dropdown-divider my-1 mx-n2"></div>
-                  </li>
-                @endif
-
-                @if (Auth::user())
-                  @foreach (Auth::user()->allTeams() as $team)
-                  {{-- Below commented code read by artisan command while installing jetstream. !! Do not remove if you want to use jetstream. --}}
-
-                  {{-- <x-switchable-team :team="$team" /> --}}
-                  @endforeach
-                @endif
-              @endif
               <li>
                 <div class="dropdown-divider my-1 mx-n2"></div>
               </li>

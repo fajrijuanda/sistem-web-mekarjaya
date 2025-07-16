@@ -1,14 +1,14 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\laravel_example\UserManagement;
-use App\Http\Controllers\dashboard\Analytics;
-use App\Http\Controllers\dashboard\Crm;
-use App\Http\Controllers\language\LanguageController;
+use App\Http\Controllers\admin\users\UserManagement;
+// use App\Http\Controllers\dashboard\Analytics;
+// use App\Http\Controllers\dashboard\Crm;
+// use App\Http\Controllers\language\LanguageController;
 use App\Http\Controllers\layouts\CollapsedMenu;
 use App\Http\Controllers\layouts\ContentNavbar;
 use App\Http\Controllers\layouts\ContentNavSidebar;
-use App\Http\Controllers\layouts\NavbarFull;
-use App\Http\Controllers\layouts\NavbarFullSidebar;
+// use App\Http\Controllers\layouts\NavbarFull;
+// use App\Http\Controllers\layouts\NavbarFullSidebar;
 use App\Http\Controllers\layouts\Horizontal;
 use App\Http\Controllers\layouts\Vertical;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -81,14 +81,14 @@ use App\Http\Controllers\pages\MiscNotAuthorized;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\Login;
 use App\Http\Controllers\authentications\RegisterBasic;
-use App\Http\Controllers\authentications\RegisterCover;
+use App\Http\Controllers\authentications\Register;
 use App\Http\Controllers\authentications\RegisterMultiSteps;
 use App\Http\Controllers\authentications\VerifyEmailBasic;
 use App\Http\Controllers\authentications\VerifyEmailCover;
 use App\Http\Controllers\authentications\ResetPasswordBasic;
-use App\Http\Controllers\authentications\ResetPasswordCover;
+use App\Http\Controllers\authentications\ResetPassword;
 use App\Http\Controllers\authentications\ForgotPasswordBasic;
-use App\Http\Controllers\authentications\ForgotPasswordCover;
+use App\Http\Controllers\authentications\ForgotPassword;
 use App\Http\Controllers\authentications\TwoStepsBasic;
 use App\Http\Controllers\authentications\TwoStepsCover;
 use App\Http\Controllers\wizard_example\Checkout as WizardCheckout;
@@ -166,27 +166,52 @@ use App\Http\Controllers\admin\administrasi\ArsipDokumen;
 use App\Http\Controllers\admin\content\Artikel;
 use App\Http\Controllers\admin\content\ProfileDesa;
 // Main Page Route
-Route::get('/', [Main::class, 'index'])->name('dashboard-analytics');
-Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
-Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
-Route::get('/layanan', [LayananSurat::class, 'index'])->name('administrasi-layanan');
-Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
-Route::get('/artikel', [Artikel::class, 'index'])->name('artikel-list');
+// Route untuk menampilkan halaman login
 
-Route::get('/artikel/create', [Artikel::class, 'create'])->name('artikel-create');
-Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('artikel-view');
-// artikel edit
-Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('artikel-edit');
+Route::middleware('guest')->group(function () {
+    Route::get('/', [Login::class, 'index'])->name('login');
+    // Login
+    Route::get('/login', [Login::class, 'index'])->name('login');
+    Route::post('/login', [Login::class, 'authenticate'])->name('login.authenticate');
 
+    // Register
+    Route::get('/register', [Register::class, 'index'])->name('register');
+    Route::post('/register', [Register::class, 'store'])->name('register.store');
 
-// profile desa
-Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('profil-desa-website');
-Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('profil-desa-update');
+    // Forgot & Reset Password
+    Route::get('forgot-password', [ForgotPassword::class, 'index'])->name('password.request');
+    Route::post('forgot-password', [ForgotPassword::class, 'sendResetLink'])->name('password.email');
+    Route::get('reset-password/{token}', [ResetPassword::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [ResetPassword::class, 'reset'])->name('password.update');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [Login::class, 'logout'])->name('logout');
+    Route::get('/dashboard/utama', [Main::class, 'index'])->name('dashboard-utama');
+    Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
+    Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
+    Route::get('/layanan', [LayananSurat::class, 'index'])->name('administrasi-layanan');
+    Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
+    Route::get('/artikel', [Artikel::class, 'index'])->name('artikel-list');
+
+    Route::get('/artikel/create', [Artikel::class, 'create'])->name('artikel-create');
+    Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('artikel-view');
+    // artikel edit
+    Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('artikel-edit');
+
+    // profile desa
+    Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('profil-desa-website');
+    Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('profil-desa-update');
+    
+    // user management
+    Route::get('/user-management', [UserManagement::class, 'UserManagement'])->name('user-management');
+    Route::resource('/user-list', UserManagement::class);
+});
 // create artikel
-Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
-Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
+// Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
+// Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale
-Route::get('/lang/{locale}', [LanguageController::class, 'swap']);
+// Route::get('/lang/{locale}', [LanguageController::class, 'swap']);
 
 // layout
 Route::get('/layouts/collapsed-menu', [CollapsedMenu::class, 'index'])->name('layouts-collapsed-menu');
@@ -272,16 +297,16 @@ Route::get('/pages/misc-not-authorized', [MiscNotAuthorized::class, 'index'])->n
 
 // authentication
 // Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
-Route::get('/auth/login', [Login::class, 'index'])->name('auth-login');
-Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
-Route::get('/auth/register-cover', [RegisterCover::class, 'index'])->name('auth-register-cover');
+// Route::get('/auth/login', [Login::class, 'index'])->name('auth-login');
+// Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
+// Route::get('/auth/register-cover', [RegisterCover::class, 'index'])->name('auth-register-cover');
 Route::get('/auth/register-multisteps', [RegisterMultiSteps::class, 'index'])->name('auth-register-multisteps');
 Route::get('/auth/verify-email-basic', [VerifyEmailBasic::class, 'index'])->name('auth-verify-email-basic');
 Route::get('/auth/verify-email-cover', [VerifyEmailCover::class, 'index'])->name('auth-verify-email-cover');
 Route::get('/auth/reset-password-basic', [ResetPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
-Route::get('/auth/reset-password-cover', [ResetPasswordCover::class, 'index'])->name('auth-reset-password-cover');
+// Route::get('/auth/reset-password-cover', [ResetPasswordCover::class, 'index'])->name('auth-reset-password-cover');
 Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
-Route::get('/auth/forgot-password-cover', [ForgotPasswordCover::class, 'index'])->name('auth-forgot-password-cover');
+// Route::get('/auth/forgot-password-cover', [ForgotPasswordCover::class, 'index'])->name('auth-forgot-password-cover');
 Route::get('/auth/two-steps-basic', [TwoStepsBasic::class, 'index'])->name('auth-two-steps-basic');
 Route::get('/auth/two-steps-cover', [TwoStepsCover::class, 'index'])->name('auth-two-steps-cover');
 
@@ -377,5 +402,3 @@ Route::get('/charts/chartjs', [ChartJs::class, 'index'])->name('charts-chartjs')
 Route::get('/maps/leaflet', [Leaflet::class, 'index'])->name('maps-leaflet');
 
 // laravel example
-Route::get('/laravel/user-management', [UserManagement::class, 'UserManagement'])->name('laravel-example-user-management');
-Route::resource('/user-list', UserManagement::class);
