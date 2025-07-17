@@ -118,9 +118,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
             render: function (data, type, full, meta) {
               const $slug = full['slug']; // Ambil slug di sini
               return `<div class="d-inline-block text-nowrap">
-                            <a href="${window.location.origin}/artikel/edit/${$slug}" class="btn btn-sm btn-icon" title="Edit Artikel"><i class="ti ti-edit"></i></a>
+                            <a href="${window.location.origin}/admin/artikel/edit/${$slug}" class="btn btn-sm btn-icon" title="Edit Artikel"><i class="ti ti-edit"></i></a>
                             <a href="javascript:;" class="btn btn-sm btn-icon delete-record" title="Hapus Artikel"><i class="ti ti-trash"></i></a>
-                            <a href="${window.location.origin}/artikel/${$slug}" class="btn btn-sm btn-icon" title="Lihat Artikel"><i class="ti ti-external-link"></i></a>
+                            <a href="${window.location.origin}/admin/artikel/${$slug}" class="btn btn-sm btn-icon" title="Lihat Artikel"><i class="ti ti-external-link"></i></a>
                           </div>`;
             }
           }

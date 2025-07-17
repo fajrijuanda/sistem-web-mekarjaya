@@ -87,7 +87,7 @@
           "url": "admin/artikel",
           "name": "Semua Artikel",
           "icon": "menu-icon tf-icons ti ti-list-details",
-          "slug": "admin.artikel-list",
+          "slug": "admin-konten-list",
           "roles": [
             "superadmin",
             "admin-konten"

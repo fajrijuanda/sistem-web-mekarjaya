@@ -238,7 +238,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/artikel/create', [Artikel::class, 'create'])->name('admin.artikel-create');
         Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('admin.artikel-view'); // Admin view detail
         Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('admin.artikel-edit');
-
+        Route::delete('/artikel/{slug}', [Artikel::class, 'destroy'])->name('admin.artikel-destroy');
+        
         // Profile Desa Admin (CRUD)
         Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('admin.profil-desa-website'); // Diubah menjadi /admin/profil/desa
         Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('admin.profil-desa-update');

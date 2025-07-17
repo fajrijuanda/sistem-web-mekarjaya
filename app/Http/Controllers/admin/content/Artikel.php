@@ -215,7 +215,7 @@ class Artikel extends Controller
             abort(404, 'Artikel tidak ditemukan.');
         }
 
-        return view('content.public.pages.artikel-detail', compact('article', 'pageConfigs'));
+        return view('content.public.pages.artikel-show', compact('article', 'pageConfigs'));
     }
 
     // create (admin)
