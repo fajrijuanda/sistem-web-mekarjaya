@@ -4,7 +4,7 @@
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Profil Desa Mekarjaya - Halaman Depan')
+@section('title', 'Profil Desa')
 
 @section('vendor-style')
     @vite(['resources/assets/vendor/libs/swiper/swiper.scss'])
@@ -141,13 +141,7 @@
                         <h2 class="hero-sub-title h6 mb-6" contenteditable="true" data-field="hero.subtitle">
                             {{ $dataProfil['hero']['subtitle'] ?? 'Kecamatan Kedungwaringin, Kabupaten Bekasi. "Mewujudkan Masyarakat Mandiri Berbasis Potensi dan Kearifan Lokal Desa".' }}
                         </h2>
-                        @auth
-                            <div class="landing-hero-btn d-inline-block position-relative">
-                                <button type="button" class="btn btn-primary btn-lg" id="editHeroBtn">
-                                    <i class="ti ti-pencil me-2"></i> Edit Bagian Hero
-                                </button>
-                            </div>
-                        @endauth
+  
                     </div>
 
                     {{-- PERUBAHAN 1: Ukuran kontainer gambar hero diperkecil --}}
@@ -157,10 +151,7 @@
                             <img src="{{ asset($dataProfil['hero']['image'] ?? 'assets/img/gallery/sosialisasi-kkn.png') }}"
                                 alt="Foto Desa Mekarjaya" class="animation-img" style="border-radius: 12px;"
                                 id="heroImage" />
-                            @auth
-                                <input type="file" accept="image/*" data-field="hero.image"
-                                    onchange="previewImage(event, 'heroImage')" />
-                            @endauth
+               
                         </div>
                     </div>
 
@@ -193,10 +184,7 @@
                             <div class="text-center mb-4 editable-image-wrapper">
                                 <img src="{{ asset($feature['icon']) }}" alt="{{ $feature['title'] }}"
                                     id="featureIcon{{ $index }}" />
-                                @auth
-                                    <input type="file" accept="image/*" data-field="features.items.{{ $index }}.icon"
-                                        onchange="previewImage(event, 'featureIcon{{ $index }}')" />
-                                @endauth
+                     
                             </div>
                             <h5 class="mb-2" contenteditable="true"
                                 data-field="features.items.{{ $index }}.title">{{ $feature['title'] }}</h5>
@@ -206,13 +194,7 @@
                         </div>
                     @endforeach
                 </div>
-                @auth
-                    <div class="text-center mt-5">
-                        <button type="button" class="btn btn-primary" id="editFeaturesBtn">
-                            <i class="ti ti-pencil me-2"></i> Edit Bagian Fitur
-                        </button>
-                    </div>
-                @endauth
+     
             </div>
         </section>
 
@@ -240,10 +222,7 @@
                                 alt="Sejarah Desa Mekarjaya"
                                 style="border-radius: 12px; max-height: 400px; width: 100%; object-fit: cover;"
                                 id="historyImage">
-                            @auth
-                                <input type="file" accept="image/*" data-field="profile.history_image"
-                                    onchange="previewImage(event, 'historyImage')" />
-                            @endauth
+          
                         </div>
                     </div>
                     <div class="col-lg-6">
@@ -304,13 +283,7 @@
                         </div>
                     </div>
                 </div>
-                @auth
-                    <div class="text-center mt-5">
-                        <button type="button" class="btn btn-primary" id="editProfileBtn">
-                            <i class="ti ti-pencil me-2"></i> Edit Bagian Profil
-                        </button>
-                    </div>
-                @endauth
+  
             </div>
         </section>
 
@@ -342,11 +315,7 @@
                                     <img src="{{ asset($member['image']) }}"
                                         class="position-absolute card-img-position bottom-0 start-50 scaleX-n1-rtl"
                                         alt="{{ $member['name'] }}" id="memberImage{{ $index }}" />
-                                    @auth
-                                        <input type="file" accept="image/*"
-                                            data-field="government.members.{{ $index }}.image"
-                                            onchange="previewImage(event, 'memberImage{{ $index }}')" />
-                                    @endauth
+                   
                                 </div>
                                 <div class="card-body border border-top-0 border-label-primary text-center">
                                     <h5 class="card-title mb-0" contenteditable="true"
@@ -361,13 +330,7 @@
                         </div>
                     @endforeach
                 </div>
-                @auth
-                    <div class="text-center mt-5">
-                        <button type="button" class="btn btn-primary" id="editGovernmentBtn">
-                            <i class="ti ti-pencil me-2"></i> Edit Bagian Pemerintahan
-                        </button>
-                    </div>
-                @endauth
+
             </div>
         </section>
 
@@ -460,219 +423,8 @@
                         </div>
                     </div>
                 </div>
-                @auth
-                    <div class="text-center mt-5">
-                        <button type="button" class="btn btn-primary" id="editContactBtn">
-                            <i class="ti ti-pencil me-2"></i> Edit Bagian Kontak
-                        </button>
-                    </div>
-                @endauth
+
             </div>
         </section>
     </div>
-
-    @auth
-        <form id="saveProfileForm" method="POST" action="{{ route('admin.profil-desa-update') }}"
-            enctype="multipart/form-data" style="display: none;">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="profile_data" id="profileDataInput">
-            <input type="file" name="image_files[]" id="imageFileInput" multiple>
-        </form>
-    @endauth
-
-    <script>
-        @auth
-        const originalData = @json($dataProfil);
-        let changes = {};
-        let newImages = {}; // Stores new image files
-
-        function enableEditing(sectionId) {
-            const section = document.getElementById(sectionId);
-            const editableElements = section.querySelectorAll('[contenteditable="true"]');
-            editableElements.forEach(el => {
-                el.setAttribute('contenteditable', 'true');
-                el.style.border = '1px dashed #ccc'; // Add a visual cue for editing
-            });
-
-            const editableImageWrappers = section.querySelectorAll('.editable-image-wrapper');
-            editableImageWrappers.forEach(wrapper => {
-                const fileInput = wrapper.querySelector('input[type="file"]');
-                if (fileInput) {
-                    fileInput.style.display = 'block';
-                }
-            });
-        }
-
-        function disableEditing(sectionId) {
-            const section = document.getElementById(sectionId);
-            const editableElements = section.querySelectorAll('[contenteditable="true"]');
-            editableElements.forEach(el => {
-                el.removeAttribute('contenteditable');
-                el.style.border = 'none';
-            });
-
-            const editableImageWrappers = section.querySelectorAll('.editable-image-wrapper');
-            editableImageWrappers.forEach(wrapper => {
-                const fileInput = wrapper.querySelector('input[type="file"]');
-                if (fileInput) {
-                    fileInput.style.display = 'none';
-                }
-            });
-        }
-
-        function collectChanges() {
-            const updatedData = JSON.parse(JSON.stringify(originalData)); // Deep copy original data
-            document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-                const fieldPath = el.dataset.field;
-                if (fieldPath) {
-                    let value = el.innerText;
-                    // Handle line breaks for subtitle
-                    if (fieldPath === 'hero.subtitle') {
-                        value = value.replace(/\n/g, '<br/>');
-                    }
-                    setNestedValue(updatedData, fieldPath, value);
-                }
-            });
-            return updatedData;
-        }
-
-        function setNestedValue(obj, path, value) {
-            const parts = path.split('.');
-            let current = obj;
-            for (let i = 0; i < parts.length; i++) {
-                const part = parts[i];
-                if (i === parts.length - 1) {
-                    current[part] = value;
-                } else {
-                    if (!current[part] || typeof current[part] !== 'object') {
-                        current[part] = isNaN(parseInt(parts[i + 1])) ? {} : [];
-                    }
-                    current = current[part];
-                }
-            }
-        }
-
-
-        function previewImage(event, imgId) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById(imgId);
-                output.src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-
-            // Store the file to be sent with the form
-            const fieldPath = event.target.dataset.field;
-            newImages[fieldPath] = event.target.files[0];
-        }
-
-
-        document.getElementById('editHeroBtn').addEventListener('click', function() {
-            const currentText = this.innerText;
-            if (currentText.includes('Edit')) {
-                enableEditing('hero-animation');
-                this.innerHTML = '<i class="ti ti-device-floppy me-2"></i> Simpan Bagian Hero';
-            } else {
-                disableEditing('hero-animation');
-                this.innerHTML = '<i class="ti ti-pencil me-2"></i> Edit Bagian Hero';
-                saveChanges();
-            }
-        });
-
-        document.getElementById('editFeaturesBtn').addEventListener('click', function() {
-            const currentText = this.innerText;
-            if (currentText.includes('Edit')) {
-                enableEditing('landingFeatures');
-                this.innerHTML = '<i class="ti ti-device-floppy me-2"></i> Simpan Bagian Fitur';
-            } else {
-                disableEditing('landingFeatures');
-                this.innerHTML = '<i class="ti ti-pencil me-2"></i> Edit Bagian Fitur';
-                saveChanges();
-            }
-        });
-
-        document.getElementById('editProfileBtn').addEventListener('click', function() {
-            const currentText = this.innerText;
-            if (currentText.includes('Edit')) {
-                enableEditing('landingProfile');
-                this.innerHTML = '<i class="ti ti-device-floppy me-2"></i> Simpan Bagian Profil';
-            } else {
-                disableEditing('landingProfile');
-                this.innerHTML = '<i class="ti ti-pencil me-2"></i> Edit Bagian Profil';
-                saveChanges();
-            }
-        });
-
-        document.getElementById('editGovernmentBtn').addEventListener('click', function() {
-            const currentText = this.innerText;
-            if (currentText.includes('Edit')) {
-                enableEditing('landingTeam');
-                this.innerHTML = '<i class="ti ti-device-floppy me-2"></i> Simpan Bagian Pemerintahan';
-            } else {
-                disableEditing('landingTeam');
-                this.innerHTML = '<i class="ti ti-pencil me-2"></i> Edit Bagian Pemerintahan';
-                saveChanges();
-            }
-        });
-
-        document.getElementById('editContactBtn').addEventListener('click', function() {
-            const currentText = this.innerText;
-            if (currentText.includes('Edit')) {
-                enableEditing('landingContact');
-                this.innerHTML = '<i class="ti ti-device-floppy me-2"></i> Simpan Bagian Kontak';
-            } else {
-                disableEditing('landingContact');
-                this.innerHTML = '<i class="ti ti-pencil me-2"></i> Edit Bagian Kontak';
-                saveChanges();
-            }
-        });
-
-        function saveChanges() {
-            const updatedData = collectChanges();
-            const form = document.getElementById('saveProfileForm');
-            const profileDataInput = document.getElementById('profileDataInput');
-            const imageFileInput = document.getElementById('imageFileInput');
-
-            profileDataInput.value = JSON.stringify(updatedData);
-
-            // Clear previous files in the input
-            imageFileInput.files = new DataTransfer().files;
-
-            // Add new image files to the input
-            for (const fieldPath in newImages) {
-                if (newImages.hasOwnProperty(fieldPath)) {
-                    const file = newImages[fieldPath];
-                    const dataTransfer = new DataTransfer();
-                    // Create a new File object with a unique name based on its field path
-                    const newFile = new File([file], `${fieldPath.replace(/\./g, '_')}_${file.name}`, {
-                        type: file.type
-                    });
-                    dataTransfer.items.add(newFile);
-                    imageFileInput.files = dataTransfer
-                    .files; // This will overwrite previous files if not carefully handled
-                    // For multiple files, you would need to append to an existing DataTransfer object or process them one by one.
-                    // For simplicity, here we're demonstrating for one file at a time or replacing the entire set.
-                    // A better approach for multiple files would be to loop and add to a DataTransfer object.
-                }
-            }
-
-            // If you want to handle multiple images properly:
-            const dataTransfer = new DataTransfer();
-            for (const fieldPath in newImages) {
-                if (newImages.hasOwnProperty(fieldPath)) {
-                    const file = newImages[fieldPath];
-                    const newFileName = `${fieldPath.replace(/\./g, '_')}_${file.name}`; // Ensure unique name for backend
-                    dataTransfer.items.add(new File([file], newFileName, {
-                        type: file.type
-                    }));
-                }
-            }
-            imageFileInput.files = dataTransfer.files;
-
-
-            form.submit(); // Submit the form
-        }
-        @endauth
-    </script>
 @endsection

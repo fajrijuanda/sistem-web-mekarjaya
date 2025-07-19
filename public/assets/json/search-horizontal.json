@@ -49,7 +49,7 @@
     {
       "name": "Konten Website Semua Artikel",
       "icon": "ti-list-details",
-      "url": "artikel",
+      "url": "article",
       "roles": [
         "superadmin",
         "admin-konten"
@@ -58,7 +58,7 @@
     {
       "name": "Konten Website Tambah Baru",
       "icon": "ti-plus",
-      "url": "artikel/create",
+      "url": "article/create",
       "roles": [
         "superadmin",
         "admin-konten"

@@ -14,4 +14,11 @@ class LayananSurat extends Controller
 
         return view('content.admin.services.pages.layanan-surat', ['pageConfigs' => $pageConfigs]);
     }
+
+    public function publicIndex()
+    {
+        $pageConfigs = ['myLayout' => 'front']; // Asumsi layout publik berbeda atau tanpa sidebar
+
+        return view('content.public.pages.layanan-surat', ['pageConfigs' => $pageConfigs]);
+    }
 }

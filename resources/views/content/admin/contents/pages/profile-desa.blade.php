@@ -483,7 +483,7 @@
 
     <script>
         @auth
-        const originalData = @json($dataProfil);
+        const originalData = @json($dataProfil ?? []);
         let changes = {};
         let newImages = {}; // Stores new image files
 
@@ -650,7 +650,7 @@
                     });
                     dataTransfer.items.add(newFile);
                     imageFileInput.files = dataTransfer
-                    .files; // This will overwrite previous files if not carefully handled
+                        .files; // This will overwrite previous files if not carefully handled
                     // For multiple files, you would need to append to an existing DataTransfer object or process them one by one.
                     // For simplicity, here we're demonstrating for one file at a time or replacing the entire set.
                     // A better approach for multiple files would be to loop and add to a DataTransfer object.

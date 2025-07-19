@@ -27,8 +27,8 @@
         <div class="card-body">
             <div class="row g-6">
                 <div class="col-md-4">
-                    <label class="form-label" for="filter-kategori">Filter Kategori:</label>
-                    <select id="filter-kategori" class="form-select select2"></select>
+                    <label class="form-label" for="filter-category">Filter Kategori:</label>
+                    <select id="filter-category" class="form-select select2"></select>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label" for="filter-tahun">Filter Tahun:</label>

@@ -77,4 +77,33 @@ class User extends Authenticatable implements MustVerifyEmail
     // Fallback jika 'profile_photo_path' null (sebagai pengaman)
     return asset('assets/img/avatars/1.png');
   }
+
+  /**
+   * ✅ GUNAKAN ACCESSOR FLEKSIBEL INI:
+   * Secara otomatis membuat URL lengkap untuk avatar dari storage ATAU assets.
+   */
+  protected function avatarUrl(): Attribute
+  {
+    return Attribute::make(
+      get: function () {
+        $path = $this->profile_photo_path;
+
+        // 1. Cek jika kolom 'profile_photo_path' tidak kosong.
+        if ($path) {
+          // 2. Prioritaskan cek di 'storage'. 
+          //    Ini untuk avatar yang diunggah oleh pengguna.
+          if (Storage::disk('public')->exists($path)) {
+            return Storage::url($path);
+          }
+
+          // 3. Jika tidak ada di 'storage', anggap ini adalah file statis di 'assets'.
+          //    Ini untuk data avatar lama Anda (misal: '1.png', '2.png').
+          return asset('assets/img/' . $path);
+        }
+
+        // 4. Jika 'profile_photo_path' kosong, gunakan avatar default.
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&background=random&color=fff';
+      }
+    );
+  }
 }

@@ -163,21 +163,24 @@ use App\Http\Controllers\admin\dashboard\PublicService;
 use App\Http\Controllers\admin\dashboard\Content;
 use App\Http\Controllers\admin\administrasi\LayananSurat;
 use App\Http\Controllers\admin\administrasi\ArsipDokumen;
-use App\Http\Controllers\admin\content\Artikel;
-use App\Http\Controllers\admin\content\ProfileDesa;
+use App\Http\Controllers\admin\content\ArticleController;
+use App\Http\Controllers\admin\content\ProfileDesaController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HomeController;
 // Main Page Route
 // Route untuk menampilkan halaman login
 
 // --- 1. Public Content Routes (Bisa diakses siapa saja, dengan atau tanpa login) ---
 
 // Route utama '/' akan mengarah ke public profile-desa
-Route::get('/', [ProfileDesa::class, 'publicIndex'])->name('public.profile-desa');
+Route::get('/', [HomeController::class, 'index'])->name('public.home');
+Route::get('/profile', [ProfileDesaController::class, 'publicIndex'])->name('public.profile-desa');
 
-// Artikel (Public List/View)
-Route::get('/artikel', [Artikel::class, 'publicIndex'])->name('public.artikel-list');
-Route::get('/artikel/{slug}', [Artikel::class, 'publicShow'])->name('public.artikel-view');
+// ArticleController (Public List/View)
+Route::get('/article', [ArticleController::class, 'publicIndex'])->name('public.article.index');
+Route::get('/article/{article:slug}', [ArticleController::class, 'publicShow'])->name('public.article.show');
 
+Route::get('/surat', [LayananSurat::class, 'publicIndex'])->name('public.surat'); // Pengajuan Surat
 // --- 2. Guest Routes (Hanya bisa diakses jika belum login) ---
 Route::middleware('guest')->group(function () {
     // Login
@@ -232,17 +235,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
 
     // Konten Website (Admin)
-    Route::prefix('admin')->group(function () { // Mengelompokkan routes admin dengan prefix 'admin'
-        // Artikel Admin (CRUD)
-        Route::get('/artikel', [Artikel::class, 'index'])->name('admin.artikel-list'); // Diubah menjadi /admin/artikel
-        Route::get('/artikel/create', [Artikel::class, 'create'])->name('admin.artikel-create');
-        Route::get('/artikel/{slug}', [Artikel::class, 'show'])->name('admin.artikel-view'); // Admin view detail
-        Route::get('/artikel/edit/{slug}', [Artikel::class, 'edit'])->name('admin.artikel-edit');
-        Route::delete('/artikel/{slug}', [Artikel::class, 'destroy'])->name('admin.artikel-destroy');
-        
+    Route::prefix('admin')->name('admin.')->group(function () { // Mengelompokkan routes admin dengan prefix 'admin'
+        // ArticleController Admin (CRUD)
+        Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Diubah menjadi /admin/article
+        Route::get('/article/create', [ArticleController::class, 'create'])->name('article.create');
+        Route::post('/article/store', [ArticleController::class, 'store'])->name('article.store'); // Admin create article
+        Route::get('/article/{article:slug}', [ArticleController::class, 'show'])->name('article.show');
+        Route::get('/article/edit/{article:slug}', [ArticleController::class, 'edit'])->name('article.edit');
+        Route::post('/article/update/{article:slug}', [ArticleController::class, 'update'])->name('article.update');
+        Route::delete('/article/{article:slug}', [ArticleController::class, 'destroy'])->name('article.destroy');
+        Route::post('/article/upload-image', [ArticleController::class, 'uploadEditorImage'])->name('article.upload-image');
         // Profile Desa Admin (CRUD)
-        Route::get('/profil/desa', [ProfileDesa::class, 'index'])->name('admin.profil-desa-website'); // Diubah menjadi /admin/profil/desa
-        Route::post('/profil/desa/update', [ProfileDesa::class, 'update'])->name('admin.profil-desa-update');
+        Route::get('/profil/desa', [ProfileDesaController::class, 'index'])->name('profil-desa-website'); // Diubah menjadi /admin/profil/desa
+        Route::post('/profil/desa/update', [ProfileDesaController::class, 'update'])->name('profil-desa-update');
     });
 
     // User Management
@@ -250,7 +255,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/user-list', UserManagement::class);
 });
 
-// create artikel
+// create article
 // Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 // Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale

@@ -77,27 +77,27 @@
     {
       "name": "Konten Website",
       "icon": "menu-icon tf-icons ti ti-news",
-      "slug": "admin-konten-website",
+      "slug": "admin.article",
       "roles": [
         "superadmin",
         "admin-konten"
       ],
       "submenu": [
         {
-          "url": "admin/artikel",
+          "url": "admin/article",
           "name": "Semua Artikel",
           "icon": "menu-icon tf-icons ti ti-list-details",
-          "slug": "admin-konten-list",
+          "slug": "admin.article.index",
           "roles": [
             "superadmin",
             "admin-konten"
           ]
         },
         {
-          "url": "admin/artikel/create",
+          "url": "admin/article/create",
           "name": "Tambah Baru",
           "icon": "menu-icon tf-icons ti ti-plus",
-          "slug": "admin.artikel-create",
+          "slug": "admin.article.create",
           "roles": [
             "superadmin",
             "admin-konten"
@@ -147,14 +147,12 @@
     {
       "name": "Artikel",
       "icon": "menu-icon tf-icons ti ti-list-details",
-      "url": "artikel",
+      "url": "article",
       "roles": [
         "user",
         "guest"
       ],
-      "slug": "public.artikel-list"
+      "slug": "public.article.index"
     }
   ]
 }
-
-   

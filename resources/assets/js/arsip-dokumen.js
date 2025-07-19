@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           { data: '' },
           { data: 'id' },
           { data: 'nama_dokumen' },
-          { data: 'kategori' },
+          { data: 'category' },
           { data: 'tanggal_unggah' },
           { data: 'ukuran_file' },
           { data: 'aksi' }
@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 'Notulen Rapat': 'bg-label-info',
                 Lainnya: 'bg-label-secondary'
               };
-              const badgeClass = kategoriBadges[full.kategori] || 'bg-label-dark';
-              return `<span class="badge ${badgeClass}">${full.kategori}</span>`;
+              const badgeClass = kategoriBadges[full.category] || 'bg-label-dark';
+              return `<span class="badge ${badgeClass}">${full.category}</span>`;
             }
           },
           { targets: 4, searchable: true },
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         ],
         order: [[4, 'desc']],
 
-        // DOM ini akan menempatkan tombol (B) dan judul (head-label) di header
+        // DOM ini akan menempatkan tombol (B) dan title (head-label) di header
         dom:
           '<"card-header d-flex flex-wrap justify-content-between gap-4"' +
           '<"head-label text-start"><"dt-action-buttons text-end pt-3 pt-md-0"B>' +
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           }
         },
         initComplete: function () {
-          const filterKategori = $('#filter-kategori');
+          const filterKategori = $('#filter-category');
           const filterTahun = $('#filter-tahun');
 
           if (filterKategori.length) {
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
             .columns(3)
             .every(function () {
               var column = this;
-              var select = $('#filter-kategori');
+              var select = $('#filter-category');
               select.append('<option value="">Semua Kategori</option>');
               column
                 .data()
@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
               selectTahun.append(`<option value="${year}">${year}</option>`);
             });
 
-          $('#filter-kategori').on('change', function () {
+          $('#filter-category').on('change', function () {
             var val = $.fn.dataTable.util.escapeRegex($(this).val());
             dt_arsip
               .column(3)
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
           });
         }
       });
-      // Mengganti judul di dalam header yang dibuat oleh DOM
+      // Mengganti title di dalam header yang dibuat oleh DOM
       $('div.head-label').html('<h5 class="card-title mb-0">Daftar Arsip Dokumen</h5>');
     }
   })();
