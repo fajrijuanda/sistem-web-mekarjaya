@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,6 +12,15 @@ return new class extends Migration
     {
         Schema::create('penduduks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('kartu_keluarga_id')->constrained()->onDelete('cascade');
+            $table->string('nama_lengkap');
+            $table->string('nik', 16)->unique();
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
+            $table->string('agama');
+            $table->string('pekerjaan');
+            // Tambahkan kolom lain yang relevan sesuai kebutuhan (status perkawinan, pendidikan, dll)
             $table->timestamps();
         });
     }

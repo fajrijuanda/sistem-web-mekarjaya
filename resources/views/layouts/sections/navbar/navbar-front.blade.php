@@ -32,19 +32,21 @@
                     <i class="ti ti-x ti-lg"></i>
                 </button>
                 <ul class="navbar-nav me-auto">
-                   {{-- home --}}
+                    {{-- home --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ $activeClass }}" aria-current="page" href="{{ url('/') }}">Home</a>
+                        <a class="nav-link fw-medium {{ $activeClass }}" aria-current="page"
+                            href="{{ url('/') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" aria-current="page" href="{{ url('/profile') }}">Profile Desa</a>
+                        <a class="nav-link fw-medium" aria-current="page" href="{{ url('/profil-desa') }}">Profile
+                            Desa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ url('/article') }}">Artikel</a>
+                        <a class="nav-link fw-medium" href="{{ url('/artikel') }}">Artikel</a>
                     </li>
                     {{-- pengajuan surat --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ url('/surat') }}">Pengajuan Surat</a>
+                        <a class="nav-link fw-medium" href="{{ url('/pengajuan-surat') }}">Pengajuan Surat</a>
                 </ul>
             </div>
             <div class="landing-menu-overlay d-lg-none"></div>
@@ -81,7 +83,7 @@
                 <li>
                     <a href="{{ url('/login') }}" class="btn btn-primary" target="_blank"><span
                             class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span><span
-                            class="d-none d-md-block">Login/Register</span></a>
+                            class="d-none d-md-block">Login</span></a>
                 </li>
                 <!-- navbar button: End -->
             </ul>

@@ -166,7 +166,8 @@ use App\Http\Controllers\admin\administrasi\ArsipDokumen;
 use App\Http\Controllers\admin\content\ArticleController;
 use App\Http\Controllers\admin\content\ProfileDesaController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\PengajuanSuratController;
 // Main Page Route
 // Route untuk menampilkan halaman login
 
@@ -174,14 +175,21 @@ use App\Http\Controllers\HomeController;
 
 // Route utama '/' akan mengarah ke public profile-desa
 Route::get('/', [HomeController::class, 'index'])->name('public.home');
-Route::get('/profile', [ProfileDesaController::class, 'publicIndex'])->name('public.profile-desa');
+// Route Halaman Publik
+Route::get('/profil-desa', [ProfileDesaController::class, 'publicIndex'])->name('public.profil-desa');
 
-// ArticleController (Public List/View)
-Route::get('/article', [ArticleController::class, 'publicIndex'])->name('public.article.index');
-Route::get('/article/{article:slug}', [ArticleController::class, 'publicShow'])->name('public.article.show');
+// Grup untuk Artikel Publik
+Route::prefix('artikel')->name('public.article.')->group(function () {
+    Route::get('/', [ArticleController::class, 'publicIndex'])->name('index');
+    Route::get('/{article:slug}', [ArticleController::class, 'publicShow'])->name('show');
+});
 
-Route::get('/surat', [LayananSurat::class, 'publicIndex'])->name('public.surat'); // Pengajuan Surat
-// --- 2. Guest Routes (Hanya bisa diakses jika belum login) ---
+// Grup untuk Pengajuan Surat Publik
+Route::prefix('pengajuan-surat')->name('public.pengajuan-surat.')->group(function () {
+    Route::get('/', [PengajuanSuratController::class, 'index'])->name('index');
+    Route::get('/{jenisLayanan:slug}', [PengajuanSuratController::class, 'create'])->name('create');
+    Route::post('/{jenisLayanan:slug}', [PengajuanSuratController::class, 'store'])->name('store');
+});
 Route::middleware('guest')->group(function () {
     // Login
     Route::get('/login', [Login::class, 'index'])->name('login');
@@ -215,18 +223,9 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1') // 'auth' sudah di group ini
         ->name('verification.send');
 
-    // Dashboard utama setelah login
-    // Ini adalah dashboard untuk admin atau user biasa setelah login
-    Route::get('/dashboard', function () {
-        // Jika user adalah role 'user' DAN belum terverifikasi, redirect ke halaman verifikasi
-        if (Auth::user()->role === 'user' && (is_null(Auth::user()->email_verified_at) || !Auth::user()->email_verified_at)) {
-            return redirect()->route('verification.notice');
-        }
-        return view('content.admin.contents.pages.profile-desa');
-    })->name('dashboard');
-
     // Dashboard spesifik berdasarkan role (jika diperlukan)
     Route::get('/dashboard/utama', [Main::class, 'index'])->name('dashboard-utama');
+    Route::get('/dashboard/latest-requests', [Main::class, 'latestRequests'])->name('dashboard.latest-requests');
     Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
     Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
 

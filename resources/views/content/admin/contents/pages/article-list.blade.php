@@ -112,12 +112,17 @@
                 {{ session('success') }}
             </div>
         @endif
+
+        {{-- ✅ PERUBAHAN: Menambahkan card-header statis --}}
+        <div class="card-header border-bottom">
+            <h5 class="card-title mb-0">Filter Pencarian</h5>
+        </div>
+
         <div class="card-datatable table-responsive">
-            {{-- Nama class 'datatables-article' harus cocok dengan selector di JS --}}
-            <table class="datatables-article table border-top">
-                <thead>
+            <table class="datatables-article table">
+                <thead class="border-top">
                     <tr>
-                        <th></th> {{-- Kolom kosong untuk responsive control --}}
+                        <th></th>
                         <th>Artikel</th>
                         <th>Kategori</th>
                         <th>Penulis</th>

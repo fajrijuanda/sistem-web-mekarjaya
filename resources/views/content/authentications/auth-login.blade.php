@@ -63,7 +63,7 @@
                             </div>
                         @endif
                         <div class="mb-6">
-                            <label for="email" class="form-label">Email or Username</label>
+                            <label for="email" class="form-label">Email</label>
                             <input type="text" class="form-control" id="email" name="email"
                                 placeholder="Masukkan email Anda" autofocus value="{{ old('email') }}">
                         </div>
@@ -94,12 +94,12 @@
                         </button>
                     </form>
 
-                    <p class="text-center">
+                    {{-- <p class="text-center">
                         <span>New on our platform?</span>
                         <a href="{{ url('auth/register-cover') }}">
                             <span>Create an account</span>
                         </a>
-                    </p>
+                    </p> --}}
 
 
                 </div>

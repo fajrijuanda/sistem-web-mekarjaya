@@ -133,26 +133,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "Profile Desa",
-      "icon": "menu-icon tf-icons ti ti-id",
-      "url": "/",
-      "roles": [
-        "user",
-        "guest"
-      ],
-      "slug": "public.profile-desa"
-    },
-    {
-      "name": "Artikel",
-      "icon": "menu-icon tf-icons ti ti-list-details",
-      "url": "article",
-      "roles": [
-        "user",
-        "guest"
-      ],
-      "slug": "public.article.index"
     }
   ]
 }

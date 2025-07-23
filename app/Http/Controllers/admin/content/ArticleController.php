@@ -120,7 +120,7 @@ class ArticleController extends Controller
             return $date->year; // Gunakan atribut 'year' dari Carbon
         })->unique()->sortDesc()->values();
 
-        return view('content.public.pages.article-list', [
+        return view('content.public.pages.article.article-list', [
             'pageConfigs' => ['myLayout' => 'front'],
             'articles' => $articles,
             'uniqueCategories' => $uniqueCategories,
@@ -145,7 +145,7 @@ class ArticleController extends Controller
             session()->push('viewed_articles', $article->id);
         }
 
-        return view('content.public.pages.article-show', [
+        return view('content.public.pages.article.article-show', [
             'pageConfigs' => ['myLayout' => 'front'],
             'article' => $article,
         ]);

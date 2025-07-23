@@ -194,7 +194,7 @@
                 <h2 class="hero-sub-title h6">
                     {{ $dataProfil['hero']['subtitle'] ??
                         'Temukan berbagai informasi menarik dan berita terkini seputar desa kami. Dari kegiatan komunitas hingga
-                                                                                    laporan pembangunan, kami hadirkan untuk Anda.' }}
+                                                                                                                            laporan pembangunan, kami hadirkan untuk Anda.' }}
                 </h2>
             </div>
         </div>
@@ -202,7 +202,7 @@
     <div class="container-xxl flex-grow-1 container-p-y pt-5 pb-5">
 
         <!-- Filter Section -->
-        <div class="card mb-5 shadow-sm mt-5">
+        <div class="card mb-5 shadow-sm">
             {{-- Hapus kelas 'border-bottom' dari card-header --}}
             <div class="card-header">
                 <h5 class="card-title mb-0">Filter Artikel</h5>
@@ -271,6 +271,9 @@
                                     <span
                                         class="badge rounded-pill {{ $categoryBadges[$article->category] ?? 'bg-label-secondary' }}">
                                         {{ $article->category ?? 'Tanpa Kategori' }}
+                                    </span>
+                                    <span class="d-flex align-items-center">
+                                        <i class="ti ti-eye ti-sm me-1"></i>{{ number_format($article->views) }} Dilihat
                                     </span>
                                 </div>
                             </div>

@@ -115,22 +115,23 @@
                             <div class="article-header"> {{-- Pusatkan metadata --}}
                                 <h1 class="article-title mb-3">{{ $article->title }}</h1>
                                 <div class="article-meta d-flex justify-content-left flex-wrap gap-3 align-items-center">
-
-                                    {{-- KATEGORI DENGAN WARNA DINAMIS --}}
-                                    <a href="{{ route('public.article.index', ['category' => $article->category]) }}"
-                                        class="badge rounded-pill {{ $categoryBadges[$article->category] ?? 'bg-label-secondary' }}">
-                                        {{ $article->category }}
-                                    </a>
-
                                     {{-- METADATA LAINNYA --}}
                                     <span class="d-flex align-items-center">
-                                        <i class="ti ti-user-circle ti-sm me-1"></i>Oleh:
+                                        <div class="avatar avatar-sm me-2">
+                                            <img src="{{ $article->user->avatar_url }}" alt="Avatar"
+                                                class="rounded-circle">
+                                        </div>Oleh:
                                         {{ $article->user->name ?? 'Admin' }}
                                     </span>
                                     <span class="d-flex align-items-center">
                                         <i
                                             class="ti ti-calendar-event ti-sm me-1"></i>{{ $article->formatted_published_date }}
                                     </span>
+                                    {{-- KATEGORI DENGAN WARNA DINAMIS --}}
+                                    <a href="{{ route('public.article.index', ['category' => $article->category]) }}"
+                                        class="badge rounded-pill {{ $categoryBadges[$article->category] ?? 'bg-label-secondary' }}">
+                                        {{ $article->category }}
+                                    </a>
                                     <span class="d-flex align-items-center">
                                         <i class="ti ti-eye ti-sm me-1"></i>{{ number_format($article->views) }} Dilihat
                                     </span>
