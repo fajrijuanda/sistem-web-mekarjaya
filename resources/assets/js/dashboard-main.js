@@ -3,22 +3,25 @@
  */
 
 'use strict';
-
 (function () {
-  let cardColor, headingColor, labelColor, shadeColor;
+  let cardColor, headingColor, labelColor, shadeColor, borderColor, axisColor;
   if (isDarkStyle) {
     cardColor = config.colors_dark.cardColor;
-    labelColor = config.colors_dark.textMuted;
     headingColor = config.colors_dark.headingColor;
+    labelColor = config.colors_dark.textMuted;
+    borderColor = config.colors_dark.borderColor;
+    axisColor = config.colors_dark.axisColor;
     shadeColor = 'dark';
   } else {
     cardColor = config.colors.cardColor;
-    labelColor = config.colors.textMuted;
     headingColor = config.colors.headingColor;
+    labelColor = config.colors.textMuted;
+    borderColor = config.colors.borderColor;
+    axisColor = config.colors.axisColor;
     shadeColor = '';
   }
 
-  // Swiper Card (Tidak ada perubahan)
+  // Swiper Card
   // --------------------------------------------------------------------
   const swiperWithPagination = document.querySelector('#swiper-with-pagination-cards');
   if (swiperWithPagination) {
@@ -35,16 +38,17 @@
     });
   }
 
-  // Grafik Tren Aktivitas Desa
+  // Grafik Tren Aktivitas Desa (Line Chart)
   // --------------------------------------------------------------------
-  const activityChartEl = document.querySelector('#activityChart'),
-    activityChartConfig = {
+  const activityChartEl = document.querySelector('#activityChart');
+  if (typeof activityChartEl !== 'undefined' && activityChartEl !== null) {
+    const activityChartConfig = {
       chart: { height: 255, type: 'area', parentHeightOffset: 0, toolbar: { show: false } },
       dataLabels: { enabled: false },
       stroke: { width: 3, curve: 'smooth' },
       series: [
-        { name: 'Layanan', data: trenData.layanan }, // ✅ Data dinamis
-        { name: 'Artikel', data: trenData.artikel } // ✅ Data dinamis
+        { name: 'Layanan', data: trenData.layanan },
+        { name: 'Artikel', data: trenData.artikel }
       ],
       colors: [config.colors.primary, config.colors.info],
       fill: {
@@ -58,7 +62,7 @@
         padding: { top: -15, bottom: -10, left: 15, right: 10 }
       },
       xaxis: {
-        categories: trenData.labels, // ✅ Data dinamis
+        categories: trenData.labels,
         axisBorder: { show: false },
         axisTicks: { show: false },
         labels: { style: { colors: labelColor, fontSize: '13px' } }
@@ -66,18 +70,50 @@
       yaxis: { labels: { style: { colors: labelColor, fontSize: '13px' } } },
       tooltip: { shared: true }
     };
-  if (typeof activityChartEl !== undefined && activityChartEl !== null) {
     const activityChart = new ApexCharts(activityChartEl, activityChartConfig);
     activityChart.render();
   }
 
-  // Komposisi Kategori Layanan
+  // Komposisi Kategori Layanan (Donut Chart) - DIPERBAIKI
   // --------------------------------------------------------------------
-  const serviceCompositionChartEl = document.querySelector('#serviceCompositionChart'),
-    serviceCompositionChartOptions = {
-      series: komposisiLayananData.map(item => item.total_permohonan), // ✅ Data dinamis
-      labels: komposisiLayananData.map(item => item.nama_kategori), // ✅ Data dinamis
-      chart: { height: 360, type: 'donut' },
+  const serviceCompositionChartEl = document.querySelector('#serviceCompositionChart');
+  if (typeof serviceCompositionChartEl !== 'undefined' && serviceCompositionChartEl !== null) {
+    const labels = komposisiLayananData.map(item => item.nama_kategori);
+    const series = komposisiLayananData.map(item => item.permohonan_layanans_count); // Menggunakan key yang benar
+
+    const serviceCompositionChartOptions = {
+      chart: {
+        height: 250,
+        type: 'donut'
+      },
+      labels: labels,
+      series: series,
+      colors: [
+        config.colors.primary,
+        config.colors.success,
+        config.colors.warning,
+        config.colors.info,
+        config.colors.danger,
+        config.colors.secondary
+      ],
+      stroke: {
+        width: 5,
+        colors: [cardColor]
+      },
+      dataLabels: {
+        enabled: false
+      },
+      legend: {
+        show: false // Legenda sudah dibuat manual di HTML
+      },
+      grid: {
+        padding: {
+          top: 15,
+          bottom: -10,
+          left: 0,
+          right: 0
+        }
+      },
       plotOptions: {
         pie: {
           donut: {
@@ -85,55 +121,136 @@
             labels: {
               show: true,
               value: {
-                fontSize: '2rem',
+                fontSize: '1.5rem',
                 fontFamily: 'Public Sans',
                 color: headingColor,
                 offsetY: -15,
-                formatter: val => parseInt(val) + ' '
+                formatter: function (val) {
+                  return parseInt(val);
+                }
               },
-              name: { offsetY: 20, fontFamily: 'Public Sans' },
+              name: {
+                offsetY: 20,
+                fontFamily: 'Public Sans'
+              },
               total: {
                 show: true,
-                fontSize: '.7rem',
+                fontSize: '0.8125rem',
+                color: axisColor,
                 label: 'Total',
-                color: labelColor,
-                formatter: w => w.globals.seriesTotals.reduce((a, b) => a + b, 0)
+                formatter: function (w) {
+                  return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                }
               }
             }
           }
         }
-      },
-      colors: [
-        config.colors.primary,
-        config.colors.info,
-        config.colors.warning,
-        config.colors.success,
-        config.colors.danger
-      ],
-      stroke: { width: 0 },
-      dataLabels: { enabled: false, formatter: (val, opt) => parseInt(val) + '%' },
-      legend: { show: false },
-      grid: { padding: { top: 15, bottom: -10 } }
+      }
     };
-  if (typeof serviceCompositionChartEl !== undefined && serviceCompositionChartEl !== null) {
     const serviceCompositionChart = new ApexCharts(serviceCompositionChartEl, serviceCompositionChartOptions);
     serviceCompositionChart.render();
   }
 
-  // Tabel Permohonan Layanan Terbaru
+  // Grafik Sumber Pengunjung (Donut Chart)
+  // --------------------------------------------------------------------
+  const trafficSourceChartEl = document.querySelector('#trafficSourceChart');
+  if (typeof trafficSourceChartEl !== 'undefined' && trafficSourceChartEl !== null) {
+    const trafficSourceChartConfig = {
+      chart: { height: 170, width: 150, parentHeightOffset: 0, type: 'donut' },
+      labels: ['Google', 'Facebook', 'Direct', 'Lainnya'],
+      series: [45, 25, 20, 10], // Data dummy
+      colors: [config.colors.primary, config.colors.info, config.colors.success, config.colors.secondary],
+      stroke: { width: 0 },
+      dataLabels: { enabled: false },
+      legend: { show: false },
+      tooltip: { theme: false },
+      grid: { padding: { top: 0 } },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '70%',
+            labels: {
+              show: true,
+              value: {
+                fontSize: '1.125rem',
+                fontFamily: 'Public Sans',
+                color: headingColor,
+                fontWeight: 500,
+                offsetY: -20,
+                formatter: val => parseInt(val) + '%'
+              },
+              name: { offsetY: 20, fontFamily: 'Public Sans' },
+              total: { show: true, fontSize: '.9375rem', label: 'Total', color: labelColor, formatter: w => '15.2k' } // Data dummy
+            }
+          }
+        }
+      }
+    };
+    const trafficSourceChart = new ApexCharts(trafficSourceChartEl, trafficSourceChartConfig);
+    trafficSourceChart.render();
+  }
+
+  // Grafik Kategori Paling Populer (Horizontal Bar)
+  // --------------------------------------------------------------------
+  const popularCategoriesChartEl = document.querySelector('#popularCategoriesChart');
+  if (typeof popularCategoriesChartEl !== 'undefined' && popularCategoriesChartEl !== null) {
+    const popularCategoriesChartConfig = {
+      chart: { height: 320, type: 'bar', toolbar: { show: false } },
+      plotOptions: {
+        bar: { horizontal: true, barHeight: '70%', distributed: true, startingShape: 'rounded', borderRadius: 7 }
+      },
+      grid: {
+        strokeDashArray: 10,
+        borderColor: borderColor,
+        xaxis: { lines: { show: true } },
+        yaxis: { lines: { show: false } },
+        padding: { top: -35, bottom: -12 }
+      },
+      colors: [
+        config.colors.primary,
+        config.colors.info,
+        config.colors.success,
+        config.colors.secondary,
+        config.colors.danger
+      ],
+      dataLabels: {
+        enabled: true,
+        style: { colors: ['#fff'], fontWeight: 500, fontSize: '13px', fontFamily: 'Public Sans' },
+        formatter: (val, opts) => popularCategoriesChartConfig.labels[opts.dataPointIndex],
+        offsetX: 0,
+        dropShadow: { enabled: false }
+      },
+      labels: ['Berita Desa', 'Pengumuman', 'UMKM', 'Kesehatan', 'Kegiatan'], // Data dummy
+      series: [{ data: [42, 35, 22, 18, 11] }], // Data dummy
+      xaxis: {
+        categories: ['42%', '35%', '22%', '18%', '11%'],
+        axisBorder: { show: false },
+        axisTicks: { show: false },
+        labels: { style: { colors: labelColor, fontSize: '13px' }, formatter: val => `${val}` }
+      },
+      yaxis: { max: 45, labels: { style: { colors: [labelColor], fontFamily: 'Public Sans', fontSize: '13px' } } },
+      tooltip: {
+        enabled: true,
+        style: { fontSize: '12px' },
+        onDatasetHover: { highlightDataSeries: false },
+        custom: ({ series, seriesIndex, dataPointIndex, w }) =>
+          '<div class="px-3 py-2"><span>' + series[seriesIndex][dataPointIndex] + ' Dilihat</span></div>'
+      },
+      legend: { show: false }
+    };
+    const popularCategoriesChart = new ApexCharts(popularCategoriesChartEl, popularCategoriesChartConfig);
+    popularCategoriesChart.render();
+  }
+
+  // Tabel Permohonan Layanan Terbaru (DataTable)
   // --------------------------------------------------------------------
   var dt_requests_table = $('.datatables-requests');
   if (dt_requests_table.length) {
     dt_requests_table.DataTable({
       ajax: {
-        url: '/dashboard/latest-requests', // ✅ URL dinamis
-        /**
-         * ✅ PERBAIKAN: Tambahkan error handler untuk debugging.
-         * Ini akan menangkap error dari server dan menampilkannya di console.
-         */
+        url: '/dashboard/latest-requests',
         error: function (xhr, error, code) {
           console.log('DataTables AJAX Error:', xhr.responseJSON || xhr.responseText);
-          alert('Gagal memuat data tabel. Silakan periksa console (F12) untuk detail error dari server.');
         }
       },
       columns: [
@@ -195,7 +312,7 @@
       dom: '<"card-header pb-0 pt-sm-0"<"head-label text-center"><"d-flex justify-content-center justify-content-md-end"f>>t<"row mx-2"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
       displayLength: 5,
       lengthMenu: [5, 10, 25, 50],
-      language: { search: '', searchPlaceholder: 'Cari Layanan...' },
+      language: { search: '', searchPlaceholder: 'Cari Layanan...', sProcessing: 'Memuat...' },
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({

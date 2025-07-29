@@ -142,42 +142,61 @@
     document.addEventListener('DOMContentLoaded', function() {
         const btnTambahPemberi = document.getElementById('btn-tambah-pemberi');
         const listPemberi = document.getElementById('pemberi-waris-list');
-        let pemberiIndex = 1; // Mulai dari 1 karena 0 sudah ada
 
-        btnTambahPemberi.addEventListener('click', function() {
-            const newItem = document.createElement('div');
-            newItem.classList.add('card', 'pemberi-waris-item', 'mb-3');
-            newItem.innerHTML = `
+        if (btnTambahPemberi && listPemberi) {
+            const updateIndexes = () => {
+                const items = listPemberi.querySelectorAll('.pemberi-waris-item');
+                items.forEach((item, index) => {
+                    const title = item.querySelector('.card-title');
+                    if (title) {
+                        title.textContent = `Pemberi Hak ${index + 1}`;
+                    }
+
+                    const inputs = item.querySelectorAll('[name]');
+                    inputs.forEach(input => {
+                        const name = input.getAttribute('name');
+                        const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                        input.setAttribute('name', newName);
+                    });
+                });
+            };
+
+            btnTambahPemberi.addEventListener('click', function() {
+                const currentIndex = listPemberi.querySelectorAll('.pemberi-waris-item').length;
+                const newItem = document.createElement('div');
+                newItem.classList.add('card', 'pemberi-waris-item', 'mb-3');
+
+                newItem.innerHTML = `
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <h6 class="card-title fw-bold">Pemberi Hak ${pemberiIndex + 1}</h6>
-                    <button type="button" class="btn-close btn-remove-pemberi" aria-label="Close"></button>
+                    <h6 class="card-title fw-bold">Pemberi Hak ${currentIndex + 1}</h6>
+                    <button type="button" class="btn-close btn-remove-item" aria-label="Close"></button>
                 </div>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="form_data[pihak_pertama][${pemberiIndex}][nama]" class="form-control" placeholder="Nama pemberi hak" required>
+                        <input type="text" name="form_data[pihak_pertama][${currentIndex}][nama]" class="form-control" placeholder="Nama pemberi hak" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Umur</label>
-                        <input type="number" name="form_data[pihak_pertama][${pemberiIndex}][umur]" class="form-control" placeholder="Contoh: 59" required>
+                        <input type="number" name="form_data[pihak_pertama][${currentIndex}][umur]" class="form-control" placeholder="Contoh: 59" required>
                     </div>
                     <div class="col-12">
                         <label class="form-label">Alamat</label>
-                        <textarea name="form_data[pihak_pertama][${pemberiIndex}][alamat]" class="form-control" rows="2" placeholder="Alamat lengkap" required></textarea>
+                        <textarea name="form_data[pihak_pertama][${currentIndex}][alamat]" class="form-control" rows="2" placeholder="Alamat lengkap" required></textarea>
                     </div>
                 </div>
             </div>`;
 
-            listPemberi.appendChild(newItem);
-            pemberiIndex++;
-        });
+                listPemberi.appendChild(newItem);
+            });
 
-        // Event listener untuk tombol hapus
-        listPemberi.addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('btn-remove-pemberi')) {
-                e.target.closest('.pemberi-waris-item').remove();
-            }
-        });
+            listPemberi.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('btn-remove-item')) {
+                    e.target.closest('.pemberi-waris-item').remove();
+                    updateIndexes();
+                }
+            });
+        }
     });
 </script>

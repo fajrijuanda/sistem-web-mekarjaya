@@ -131,27 +131,52 @@
         const listKeluarga = document.getElementById('keluarga-pindah-list');
         let keluargaIndex = 1; // Mulai dari 1 karena 0 sudah ada
 
-        btnTambahKeluarga.addEventListener('click', function() {
-            const newItem = document.createElement('div');
-            newItem.classList.add('card', 'keluarga-pindah-item', 'mb-3');
-            newItem.innerHTML = `
+        if (btnTambahKeluarga && listKeluarga) {
+            // Fungsi untuk memperbarui nomor urut dan atribut 'name'
+            const updateIndexes = () => {
+                const items = listKeluarga.querySelectorAll('.keluarga-pindah-item');
+                items.forEach((item, index) => {
+                    // Update judul (e.g., "Anggota 1", "Anggota 2")
+                    const title = item.querySelector('.card-title');
+                    if (title) {
+                        title.textContent = `Anggota ${index + 1}`;
+                    }
+
+                    // Update atribut 'name' pada semua input/select di dalam item
+                    const inputs = item.querySelectorAll('[name]');
+                    inputs.forEach(input => {
+                        const name = input.getAttribute('name');
+                        // Regex untuk mengganti angka di dalam kurung siku, e.g., keluarga_pindah[0][nik] -> keluarga_pindah[1][nik]
+                        const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                        input.setAttribute('name', newName);
+                    });
+                });
+            };
+
+            btnTambahKeluarga.addEventListener('click', function() {
+                const currentIndex = listKeluarga.querySelectorAll('.keluarga-pindah-item').length;
+                const newItem = document.createElement('div');
+                newItem.classList.add('card', 'keluarga-pindah-item', 'mb-3');
+
+                // Template HTML untuk item baru. Perhatikan penggunaan `currentIndex` untuk indeks awal.
+                newItem.innerHTML = `
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <h6 class="card-title fw-bold">Anggota ${keluargaIndex + 1}</h6>
+                    <h6 class="card-title fw-bold">Anggota ${currentIndex + 1}</h6>
                     <button type="button" class="btn-close btn-remove-item" aria-label="Close"></button>
                 </div>
                 <div class="row g-3">
                     <div class="col-lg-4">
                         <label class="form-label">NIK</label>
-                        <input type="text" name="form_data[keluarga_pindah][${keluargaIndex}][nik]" class="form-control" placeholder="16 digit NIK" required>
+                        <input type="text" name="form_data[keluarga_pindah][${currentIndex}][nik]" class="form-control" placeholder="16 digit NIK" required>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="form_data[keluarga_pindah][${keluargaIndex}][nama]" class="form-control" placeholder="Nama sesuai KTP" required>
+                        <input type="text" name="form_data[keluarga_pindah][${currentIndex}][nama]" class="form-control" placeholder="Nama sesuai KTP" required>
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">SHDK</label>
-                        <select class="form-select" name="form_data[keluarga_pindah][${keluargaIndex}][shdk]" required>
+                        <select class="form-select" name="form_data[keluarga_pindah][${currentIndex}][shdk]" required>
                             <option value="" disabled selected>Pilih Status</option>
                             <option value="Kepala Keluarga">Kepala Keluarga</option>
                             <option value="Suami">Suami</option>
@@ -168,15 +193,18 @@
                 </div>
             </div>`;
 
-            listKeluarga.appendChild(newItem);
-            keluargaIndex++;
-        });
+                listKeluarga.appendChild(newItem);
+            });
 
-        // Event listener untuk tombol hapus
-        listKeluarga.addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('btn-remove-item')) {
-                e.target.closest('.keluarga-pindah-item').remove();
-            }
-        });
+            // Event listener untuk tombol hapus (menggunakan event delegation)
+            listKeluarga.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('btn-remove-item')) {
+                    // Hapus elemen card dari DOM
+                    e.target.closest('.keluarga-pindah-item').remove();
+                    // Panggil fungsi untuk memperbarui semua nomor urut dan atribut 'name'
+                    updateIndexes();
+                }
+            });
+        }
     });
 </script>

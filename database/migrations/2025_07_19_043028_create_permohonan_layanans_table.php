@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 return new class extends Migration {
     /**
      * Run the migrations.
@@ -19,6 +18,7 @@ return new class extends Migration {
             $table->text('keterangan_pemohon')->nullable(); // Catatan dari pemohon
             $table->text('catatan_admin')->nullable(); // Catatan dari admin jika ditolak
             $table->json('berkas')->nullable();
+            $table->json('form_data')->nullable();
             $table->timestamp('tanggal_selesai')->nullable(); // Kapan permohonan selesai/ditolak
             $table->timestamps(); // Kapan permohonan dibuat (created_at)
         });

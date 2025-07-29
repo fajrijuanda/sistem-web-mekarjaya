@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class KategoriLayanan extends Model
 {
@@ -24,5 +25,10 @@ class KategoriLayanan extends Model
     public function jenisLayanan(): HasMany
     {
         return $this->hasMany(JenisLayanan::class);
+    }
+
+    public function permohonanLayanans(): HasManyThrough
+    {
+        return $this->hasManyThrough(PermohonanLayanan::class, JenisLayanan::class);
     }
 }

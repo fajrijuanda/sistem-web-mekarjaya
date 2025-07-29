@@ -1,46 +1,14 @@
 {
   "menu": [
     {
-      "name": "Dashboards",
+      "name": "Dashboard",
       "icon": "menu-icon tf-icons ti ti-smart-home",
-      "slug": "dashboard",
+      "slug": "dashboard-utama",
+      "url": "dashboard/utama",
       "roles": [
         "superadmin",
         "admin-pelayanan",
         "admin-konten"
-      ],
-      "submenu": [
-        {
-          "url": "dashboard/utama",
-          "name": "Utama",
-          "icon": "menu-icon tf-icons ti ti-chart-pie-2",
-          "slug": "dashboard-utama",
-          "roles": [
-            "superadmin",
-            "admin-pelayanan",
-            "admin-konten"
-          ]
-        },
-        {
-          "url": "dashboard/pelayanan",
-          "name": "Pelayanan Publik",
-          "icon": "menu-icon tf-icons ti ti-file-text",
-          "slug": "dashboard-pelayanan",
-          "roles": [
-            "superadmin",
-            "admin-pelayanan"
-          ]
-        },
-        {
-          "url": "dashboard/konten",
-          "name": "Konten & Website",
-          "icon": "menu-icon tf-icons ti ti-news",
-          "slug": "dashboard-konten",
-          "roles": [
-            "superadmin",
-            "admin-konten"
-          ]
-        }
       ]
     },
     {
@@ -53,10 +21,10 @@
       ],
       "submenu": [
         {
-          "url": "layanan",
+          "url": "admin/layanan-surat",
           "name": "Layanan Surat",
           "icon": "menu-icon tf-icons ti ti-mail",
-          "slug": "administrasi-layanan",
+          "slug": "admin.administrasi-layanan",
           "roles": [
             "superadmin",
             "admin-pelayanan"
@@ -66,7 +34,7 @@
           "url": "arsip",
           "name": "Arsip Dokumen",
           "icon": "menu-icon tf-icons ti ti-archive",
-          "slug": "administrasi-arsip",
+          "slug": "admin.administrasi-arsip",
           "roles": [
             "superadmin",
             "admin-pelayanan"

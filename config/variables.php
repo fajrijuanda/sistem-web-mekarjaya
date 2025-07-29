@@ -1,10 +1,10 @@
 <?php
 // Variables
 return [
-  "creatorName" => "KKN UBP Karawang",
+  "creatorName" => "Desa Mekarjaya, Kedungwaringin",
   "creatorUrl" => "https://www.tiktok.com/@kknmekarjaya25_",
   "templateName" => "Mekarjaya",
-  "templateSuffix" => "KKN",
+  "templateSuffix" => "Kedungwaringin",
   "templateVersion" => "2.0.0",
   "templateFree" => false,
   "templateDescription" => "Start your development with a Dashboard for Bootstrap 5",

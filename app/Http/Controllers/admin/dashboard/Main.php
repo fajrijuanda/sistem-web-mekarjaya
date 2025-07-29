@@ -18,34 +18,30 @@ class Main extends Controller
      */
     public function index()
     {
-        // --- Data untuk Kartu Statistik ---
+        // --- DATA STATISTIK YANG DIPERBARUI ---
         $stats = [
-            // Layanan
+            // Layanan (untuk swiper)
             'totalLayanan' => PermohonanLayanan::count(),
             'layananSelesai' => PermohonanLayanan::where('status', 'Selesai')->count(),
             'layananDiproses' => PermohonanLayanan::where('status', 'Diproses')->count(),
-            // Kependudukan
+
+            // Kependudukan (untuk swiper)
             'totalPenduduk' => Penduduk::count(),
             'totalKK' => KartuKeluarga::count(),
             'totalPria' => Penduduk::where('jenis_kelamin', 'Laki-laki')->count(),
             'totalWanita' => Penduduk::where('jenis_kelamin', 'Perempuan')->count(),
-            // Konten
-            'artikelBulanIni' => Article::whereMonth('published_date', now()->month)->whereYear('published_date', now()->year)->count(),
-            'totalArtikel' => Article::count(),
+
+            // Statistik untuk 4 kartu kecil
+            'permohonanMasukBulanIni' => PermohonanLayanan::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'permohonanDitolakBulanIni' => PermohonanLayanan::where('status', 'Ditolak')->whereMonth('tanggal_selesai', now()->month)->whereYear('tanggal_selesai', now()->year)->count(),
+
+            // === STATISTIK BARU UNTUK WELCOME BANNER ===
+            'artikelMingguIni' => Article::whereBetween('published_date', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+            'totalPembaca' => Article::sum('views'), // Mengambil total dari kolom 'views'
         ];
 
-        // --- Data untuk Grafik Komposisi Layanan (Donut Chart) ---
-        $komposisiLayanan = KategoriLayanan::withCount('jenisLayanan as total_permohonan')
-            ->get()
-            ->map(function ($kategori) {
-                // Menghitung jumlah permohonan per kategori
-                $kategori->total_permohonan = PermohonanLayanan::whereHas('jenisLayanan', function ($query) use ($kategori) {
-                    $query->where('kategori_layanan_id', $kategori->id);
-                })->count();
-                return $kategori;
-            });
-
-        // --- Data untuk Grafik Tren Aktivitas (Line Chart) ---
+        // ... (sisa kode controller Anda tidak perlu diubah) ...
+        $komposisiLayanan = KategoriLayanan::withCount('permohonanLayanans')->get();
         $trenData = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
@@ -62,7 +58,6 @@ class Main extends Controller
             'trenData' => $trenData,
         ]);
     }
-
     /**
      * Menyediakan data untuk tabel Permohonan Layanan Terbaru (DataTables).
      */

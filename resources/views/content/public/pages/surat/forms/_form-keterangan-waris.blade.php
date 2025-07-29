@@ -54,18 +54,17 @@
             <h6 class="card-title fw-bold">Ahli Waris 1</h6>
             <div class="row g-3">
                 <div class="col-12">
-                    <label class="form-label" for="form_data[ahli_waris][0][nama]">Nama Lengkap</label>
+                    <label class="form-label">Nama Lengkap</label>
                     <input type="text" name="form_data[ahli_waris][0][nama]" class="form-control"
                         placeholder="Nama ahli waris" required>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="form_data[ahli_waris][0][nik]">NIK (Opsional)</label>
+                    <label class="form-label">NIK (Opsional)</label>
                     <input type="text" name="form_data[ahli_waris][0][nik]" class="form-control"
                         placeholder="16 digit NIK">
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="form_data[ahli_waris][0][ttl]">Tempat, Tanggal Lahir
-                        (Opsional)</label>
+                    <label class="form-label">Tempat, Tanggal Lahir (Opsional)</label>
                     <input type="text" name="form_data[ahli_waris][0][ttl]" class="form-control"
                         placeholder="Contoh: Bekasi, 01-01-1990">
                 </div>
@@ -109,46 +108,66 @@
     </div>
 </div>
 
+{{-- ▼▼▼ PERBAIKAN: Skrip dipindahkan dari @push ke tag <script> langsung ▼▼▼ --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const btnTambah = document.getElementById('btn-tambah-ahli-waris');
+        const btnTambahWaris = document.getElementById('btn-tambah-ahli-waris');
         const listWaris = document.getElementById('ahli-waris-list');
-        let warisIndex = 1; // Mulai dari 1 karena 0 sudah ada di HTML
 
-        btnTambah.addEventListener('click', function() {
-            const newItem = document.createElement('div');
-            newItem.classList.add('card', 'ahli-waris-item', 'mb-3');
-            newItem.innerHTML = `
+        if (btnTambahWaris && listWaris) {
+            const updateIndexes = () => {
+                const items = listWaris.querySelectorAll('.ahli-waris-item');
+                items.forEach((item, index) => {
+                    const title = item.querySelector('.card-title');
+                    if (title) {
+                        title.textContent = `Ahli Waris ${index + 1}`;
+                    }
+
+                    const inputs = item.querySelectorAll('[name]');
+                    inputs.forEach(input => {
+                        const name = input.getAttribute('name');
+                        const newName = name.replace(/\[\d+\]/, `[${index}]`);
+                        input.setAttribute('name', newName);
+                    });
+                });
+            };
+
+            btnTambahWaris.addEventListener('click', function() {
+                const currentIndex = listWaris.querySelectorAll('.ahli-waris-item').length;
+                const newItem = document.createElement('div');
+                newItem.classList.add('card', 'ahli-waris-item', 'mb-3');
+
+                newItem.innerHTML = `
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <h6 class="card-title fw-bold">Ahli Waris ${warisIndex + 1}</h6>
-                    <button type="button" class="btn-close btn-remove-waris" aria-label="Close"></button>
+                    <h6 class="card-title fw-bold">Ahli Waris ${currentIndex + 1}</h6>
+                    <button type="button" class="btn-close btn-remove-item" aria-label="Close"></button>
                 </div>
                 <div class="row g-3">
                     <div class="col-12">
                         <label class="form-label">Nama Lengkap</label>
-                        <input type="text" name="form_data[ahli_waris][${warisIndex}][nama]" class="form-control" placeholder="Nama ahli waris" required>
+                        <input type="text" name="form_data[ahli_waris][${currentIndex}][nama]" class="form-control" placeholder="Nama ahli waris" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">NIK (Opsional)</label>
-                        <input type="text" name="form_data[ahli_waris][${warisIndex}][nik]" class="form-control" placeholder="16 digit NIK">
+                        <input type="text" name="form_data[ahli_waris][${currentIndex}][nik]" class="form-control" placeholder="16 digit NIK">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Tempat, Tanggal Lahir (Opsional)</label>
-                        <input type="text" name="form_data[ahli_waris][${warisIndex}][ttl]" class="form-control" placeholder="Contoh: Bekasi, 01-01-1990">
+                        <input type="text" name="form_data[ahli_waris][${currentIndex}][ttl]" class="form-control" placeholder="Contoh: Bekasi, 01-01-1990">
                     </div>
                 </div>
             </div>`;
 
-            listWaris.appendChild(newItem);
-            warisIndex++;
-        });
+                listWaris.appendChild(newItem);
+            });
 
-        // Event listener untuk tombol hapus
-        listWaris.addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('btn-remove-waris')) {
-                e.target.closest('.ahli-waris-item').remove();
-            }
-        });
+            listWaris.addEventListener('click', function(e) {
+                if (e.target && e.target.classList.contains('btn-remove-item')) {
+                    e.target.closest('.ahli-waris-item').remove();
+                    updateIndexes();
+                }
+            });
+        }
     });
 </script>

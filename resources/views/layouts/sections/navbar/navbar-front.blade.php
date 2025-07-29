@@ -1,8 +1,6 @@
 @php
     use Illuminate\Support\Facades\Route;
     $currentRouteName = Route::currentRouteName();
-    $activeRoutes = ['front-pages-pricing', 'front-pages-payment', 'front-pages-checkout', 'front-pages-help-center'];
-    $activeClass = in_array($currentRouteName, $activeRoutes) ? 'active' : '';
 @endphp
 <!-- Navbar: Start -->
 <nav class="layout-navbar shadow-none py-0">
@@ -34,51 +32,45 @@
                 <ul class="navbar-nav me-auto">
                     {{-- home --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ $activeClass }}" aria-current="page"
-                            href="{{ url('/') }}">Home</a>
+                        <a class="nav-link fw-medium {{ $currentRouteName === 'pages-home' ? 'active' : '' }}"
+                            aria-current="page" href="{{ url('/') }}">
+                            <i class="ti ti-home-2 me-1"></i>Home
+                        </a>
+                    </li>
+                    {{-- profil desa --}}
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium {{ $currentRouteName === 'pages-profil-desa' ? 'active' : '' }}"
+                            aria-current="page" href="{{ url('/profil-desa') }}">
+                            <i class="ti ti-info-circle me-1"></i>Profile Desa
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" aria-current="page" href="{{ url('/profil-desa') }}">Profile
-                            Desa</a>
+                        <a class="nav-link fw-medium {{ $currentRouteName === 'public.peta-desa' ? 'active' : '' }}"
+                            href="{{ route('public.peta-desa') }}">
+                            <i class="ti ti-map-2 me-1"></i>Peta Desa
+                        </a>
                     </li>
+                    {{-- artikel --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ url('/artikel') }}">Artikel</a>
+                        <a class="nav-link fw-medium {{ $currentRouteName === 'pages-artikel' ? 'active' : '' }}"
+                            href="{{ url('/artikel') }}">
+                            <i class="ti ti-news me-1"></i>Artikel
+                        </a>
                     </li>
                     {{-- pengajuan surat --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium" href="{{ url('/pengajuan-surat') }}">Pengajuan Surat</a>
+                        <a class="nav-link fw-medium {{ $currentRouteName === 'public.pengajuan-surat.index' ? 'active' : '' }}"
+                            href="{{ url('/pengajuan-surat') }}">
+                            <i class="ti ti-file-text me-1"></i>Pengajuan Surat
+                        </a>
+                    </li>
                 </ul>
             </div>
             <div class="landing-menu-overlay d-lg-none"></div>
             <!-- Menu wrapper: End -->
             <!-- Toolbar: Start -->
             <ul class="navbar-nav flex-row align-items-center ms-auto">
-                {{-- @if ($configData['hasCustomizer'] == true)
-        <!-- Style Switcher -->
-        <li class="nav-item dropdown-style-switcher dropdown me-2 me-xl-1">
-          <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-            <i class='ti ti-lg'></i>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end dropdown-styles">
-            <li>
-              <a class="dropdown-item" href="javascript:void(0);" data-theme="light">
-                <span class="align-middle"><i class='ti ti-sun me-3'></i>Light</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0);" data-theme="dark">
-                <span class="align-middle"><i class="ti ti-moon-stars me-3"></i>Dark</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0);" data-theme="system">
-                <span class="align-middle"><i class="ti ti-device-desktop-analytics me-3"></i>System</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!-- / Style Switcher-->
-        @endif --}}
+
                 <!-- navbar button: Start -->
                 <li>
                     <a href="{{ url('/login') }}" class="btn btn-primary" target="_blank"><span

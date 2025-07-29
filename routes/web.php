@@ -168,7 +168,7 @@ use App\Http\Controllers\admin\content\ProfileDesaController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\PengajuanSuratController;
-// Main Page Route
+use App\Http\Controllers\Public\PetaDesa;
 // Route untuk menampilkan halaman login
 
 // --- 1. Public Content Routes (Bisa diakses siapa saja, dengan atau tanpa login) ---
@@ -183,6 +183,8 @@ Route::prefix('artikel')->name('public.article.')->group(function () {
     Route::get('/', [ArticleController::class, 'publicIndex'])->name('index');
     Route::get('/{article:slug}', [ArticleController::class, 'publicShow'])->name('show');
 });
+
+Route::get('/peta-desa', [PetaDesa::class, 'index'])->name('public.peta-desa');
 
 // Grup untuk Pengajuan Surat Publik
 Route::prefix('pengajuan-surat')->name('public.pengajuan-surat.')->group(function () {
@@ -229,10 +231,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
     Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
 
-    // Administrasi
-    Route::get('/layanan', [LayananSurat::class, 'index'])->name('administrasi-layanan');
-    Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
-
     // Konten Website (Admin)
     Route::prefix('admin')->name('admin.')->group(function () { // Mengelompokkan routes admin dengan prefix 'admin'
         // ArticleController Admin (CRUD)
@@ -247,6 +245,18 @@ Route::middleware('auth')->group(function () {
         // Profile Desa Admin (CRUD)
         Route::get('/profil/desa', [ProfileDesaController::class, 'index'])->name('profil-desa-website'); // Diubah menjadi /admin/profil/desa
         Route::post('/profil/desa/update', [ProfileDesaController::class, 'update'])->name('profil-desa-update');
+        // Administrasi
+        Route::get('/layanan', [LayananSurat::class, 'LayananSurat'])->name('administrasi-layanan');
+        Route::get('/layanan-surat', [LayananSurat::class, 'index'])->name('admin.layanan-surat.index');
+        Route::get('/layanan-surat/list', [LayananSurat::class, 'list'])->name('admin.layanan-surat.list');
+        Route::get('/layanan-surat/detail/{id}', [LayananSurat::class, 'show'])->name('admin.layanan-surat.show');
+        Route::put('/layanan-surat/update/{id}', [LayananSurat::class, 'update'])->name('admin.layanan-surat.update');
+        Route::delete('/layanan-surat/{id}', [LayananSurat::class, 'destroy'])->name('admin.layanan-surat.destroy');
+        Route::get('/layanan-surat/print/{id}', [LayananSurat::class, 'print'])->name('admin.layanan-surat.print');
+        Route::get('/layanan-surat/word/{id}', [LayananSurat::class, 'downloadWord'])->name('admin.layanan-surat.word');
+        Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
+
+
     });
 
     // User Management
