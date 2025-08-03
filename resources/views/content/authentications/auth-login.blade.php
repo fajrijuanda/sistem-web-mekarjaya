@@ -84,7 +84,7 @@
                                         Remember Me
                                     </label>
                                 </div>
-                                <a href="{{ url('auth/forgot-password-cover') }}">
+                                <a href="{{ url('forgot-password') }}">
                                     <p class="mb-0">Forgot Password?</p>
                                 </a>
                             </div>

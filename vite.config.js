@@ -71,5 +71,25 @@ export default defineConfig({
     }),
     html(),
     libsWindowAssignment()
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('highlight.js')) {
+              return 'highlight';
+            }
+            if (id.includes('mapbox-gl')) {
+              return 'mapbox';
+            }
+            if (id.includes('datatables.net-bs5')) {
+              return 'datatables';
+            }
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 10000, // Tingkatkan batas ukuran chunk jika diperlukan
+  },
 });

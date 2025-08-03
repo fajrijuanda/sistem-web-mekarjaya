@@ -14,7 +14,7 @@
     {
       "name": "Administrasi",
       "icon": "menu-icon tf-icons ti ti-files",
-      "slug": "administrasi",
+      "slug": "admin.administrasi",
       "roles": [
         "superadmin",
         "admin-pelayanan"
@@ -24,14 +24,14 @@
           "url": "admin/layanan-surat",
           "name": "Layanan Surat",
           "icon": "menu-icon tf-icons ti ti-mail",
-          "slug": "admin.administrasi-layanan",
+          "slug": "admin.administrasi-layanan-surat",
           "roles": [
             "superadmin",
             "admin-pelayanan"
           ]
         },
         {
-          "url": "arsip",
+          "url": "admin/arsip",
           "name": "Arsip Dokumen",
           "icon": "menu-icon tf-icons ti ti-archive",
           "slug": "admin.administrasi-arsip",
@@ -86,7 +86,7 @@
     {
       "name": "Manajemen Sistem",
       "icon": "menu-icon tf-icons ti ti-settings",
-      "slug": "pengguna",
+      "slug": "user",
       "roles": [
         "superadmin"
       ],
@@ -100,6 +100,18 @@
             "superadmin"
           ]
         }
+      ]
+    },
+    {
+      "name": "Halaman Publik",
+      "url": "/",
+      "icon": "menu-icon tf-icons ti ti-world",
+      "slug": "public-home",
+      "target": "_blank",
+      "roles": [
+        "superadmin",
+        "admin-pelayanan",
+        "admin-konten"
       ]
     }
   ]

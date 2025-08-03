@@ -1,3 +1,16 @@
+@php
+    use Illuminate\Support\Str;
+
+    $categoryBadges = [
+        'Berita Desa' => 'bg-label-primary',
+        'Kesehatan' => 'bg-label-danger',
+        'UMKM' => 'bg-label-success',
+        'Pengumuman' => 'bg-label-info',
+        'Kegiatan' => 'bg-label-warning',
+        'Teknologi' => 'bg-label-dark', // Contoh tambahan
+        // Tambahkan kategori lain jika perlu
+    ];
+@endphp
 @extends('layouts/layoutMaster')
 
 @section('title', 'Dashboard Utama')
@@ -18,7 +31,8 @@
     {{-- Kirim data dari PHP ke JavaScript --}}
     <script>
         const trenData = @json($trenData);
-        const komposisiLayananData = @json($komposisiLayanan);
+        const sumberPengunjungData = @json($pembacaPerKategori);
+        const popularCategoriesData = @json($popularCategories);
     </script>
     @vite(['resources/assets/js/dashboard-main.js'])
 @endsection
@@ -63,52 +77,74 @@
                     {{-- KARTU KOMENTAR DIHAPUS --}}
                 </div>
             </div>
+            {{-- Ganti bagian kartu "Pengunjung Artikel" --}}
             <div class="col-12 col-lg-4 ps-md-4 ps-lg-6">
-                {{-- Diambil dari "Time Spendings" - Link 5 --}}
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div>
-                            <h5 class="mb-1">Sumber Pengunjung</h5>
+                            <h5 class="mb-1">Total Pengunjung</h5>
                             <p class="mb-9">Laporan Bulan Ini</p>
                         </div>
                         <div class="time-spending-chart">
-                            <h4 class="mb-2">15.2k</h4>
-                            <span class="badge bg-label-success">+12.4%</span>
+                            <h4 class="mb-2">
+                                @php
+                                    $pengunjung = $stats['pengunjungBulanIni'];
+                                    if ($pengunjung >= 1000) {
+                                        echo number_format($pengunjung / 1000, 1) . 'k';
+                                    } else {
+                                        echo number_format($pengunjung);
+                                    }
+                                @endphp
+                            </h4>
+
+                            @if ($stats['persentasePerubahanPengunjung'] != 0)
+                                <span
+                                    class="badge {{ $stats['persentasePerubahanPengunjung'] > 0 ? 'bg-label-success' : 'bg-label-danger' }}">
+                                    {{ $stats['persentasePerubahanPengunjung'] > 0 ? '+' : '' }}{{ number_format($stats['persentasePerubahanPengunjung'], 1) }}%
+                                </span>
+                            @endif
                         </div>
                     </div>
-                    <div id="trafficSourceChart"></div>
+
+                    {{-- ✅ DIUBAH: Tag <img> diganti dengan struktur ikon --}}
+                    <div class="avatar">
+                        <div class="avatar-initial bg-label-success rounded">
+                            <i class="ti ti-users ti-28px"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
     <div class="row g-6">
         {{-- Kartu Utama (4 kolom) --}}
-        <div class="col-lg-4">
-            <div class="swiper-container swiper-container-horizontal swiper swiper-card-advance-bg"
+        <div class="col-lg-6">
+            <div class="swiper-container swiper-container-horizontal swiper swiper-card-advance-bg h-100"
                 id="swiper-with-pagination-cards">
                 <div class="swiper-wrapper">
-                    {{-- Slide 1: Layanan Publik (KONTEN ASLI ANDA) --}}
+
                     <div class="swiper-slide">
                         <div class="row">
                             <div class="col-12">
-                                <h5 class="text-white mb-0">Ringkasan Layanan Publik</h5>
+                                <h5 class="text-white mb-0">Ringkasan Konten Website</h5>
                                 <small>Data Keseluruhan</small>
                             </div>
                             <div class="row">
                                 <div class="col-lg-7 col-md-9 col-12 order-2 order-md-1 pt-md-9">
-                                    <h6 class="text-white mt-0 mt-md-3 mb-4">Statistik Layanan</h6>
+                                    <h6 class="text-white mt-0 mt-md-3 mb-4">Statistik Konten</h6>
                                     <div class="row">
                                         <div class="col-6">
                                             <ul class="list-unstyled mb-0">
                                                 <li class="d-flex mb-4 align-items-center">
                                                     <p class="mb-0 fw-medium me-2 website-analytics-text-bg">
-                                                        {{ number_format($stats['totalLayanan']) }}</p>
-                                                    <p class="mb-0">Total</p>
+                                                        {{ number_format($stats['totalArtikel']) }}</p>
+                                                    <p class="mb-0">Artikel</p>
                                                 </li>
                                                 <li class="d-flex align-items-center">
                                                     <p class="mb-0 fw-medium me-2 website-analytics-text-bg">
-                                                        {{ number_format($stats['layananDiproses']) }}</p>
-                                                    <p class="mb-0">Diproses</p>
+                                                        {{ number_format($stats['totalPembaca']) }}</p>
+                                                    <p class="mb-0">Pembaca</p>
                                                 </li>
                                             </ul>
                                         </div>
@@ -116,8 +152,13 @@
                                             <ul class="list-unstyled mb-0">
                                                 <li class="d-flex mb-4 align-items-center">
                                                     <p class="mb-0 fw-medium me-2 website-analytics-text-bg">
-                                                        {{ number_format($stats['layananSelesai']) }}</p>
-                                                    <p class="mb-0">Selesai</p>
+                                                        {{ number_format($stats['totalKategoriArtikel']) }}</p>
+                                                    <p class="mb-0">Kategori</p>
+                                                </li>
+                                                <li class="d-flex align-items-center">
+                                                    <p class="mb-0 fw-medium me-2 website-analytics-text-bg">
+                                                        {{ number_format($stats['totalPengguna']) }}</p>
+                                                    <p class="mb-0">Pengguna</p>
                                                 </li>
                                             </ul>
                                         </div>
@@ -125,13 +166,12 @@
                                 </div>
                                 <div class="col-lg-5 col-md-3 col-12 order-1 order-md-2 my-4 my-md-0 text-center">
                                     <img src="{{ asset('assets/img/illustrations/card-website-analytics-1.png') }}"
-                                        alt="Layanan Publik" height="150" class="card-website-analytics-img">
+                                        alt="Konten Website" height="150" class="card-website-analytics-img">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Slide 2: Kependudukan (KONTEN ASLI ANDA) --}}
                     <div class="swiper-slide">
                         <div class="row">
                             <div class="col-12">
@@ -177,50 +217,93 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
         </div>
 
-        {{-- Kartu Permohonan Masuk (2 kolom) --}}
-        {{-- Ganti bagian 4 kartu kecil --}}
-        <div class="col-lg-2 col-md-3 col-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="badge p-2 bg-label-primary mb-3 rounded"><i class="ti ti-file-import ti-28px"></i></div>
-                    <h5 class="card-title mb-1">Permohonan Masuk</h5>
-                    <p class="card-subtitle">Bulan Ini</p>
-                    <p class="text-heading mb-3 mt-1">{{ number_format($stats['permohonanMasukBulanIni']) }}</p>
+        {{-- Wrapper baru untuk grid 2x2 kartu statistik --}}
+        <div class="col-lg-6">
+            <div class="row g-6">
+                {{-- Kartu Permohonan Masuk --}}
+                <div class="col-lg-6 col-md-6 col-6"> {{-- Kelas kolom diubah untuk layout 2x2 --}}
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="content-left">
+                                    <h5 class="card-title mb-1">Permohonan Masuk</h5>
+                                    <p class="card-subtitle small">Bulan Ini</p>
+                                    <h4 class="mb-0 mt-3">{{ number_format($stats['permohonanMasukBulanIni']) }}</h4>
+                                </div>
+                                <div class="avatar">
+                                    <div class="avatar-initial bg-label-primary rounded">
+                                        <i class="ti ti-file-import ti-28px"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="badge p-2 bg-label-warning mb-3 rounded"><i class="ti ti-hourglass ti-28px"></i></div>
-                    <h5 class="card-title mb-1">Masih Dalam Proses</h5>
-                    <p class="card-subtitle">Saat Ini</p>
-                    <p class="text-heading mb-3 mt-1">{{ number_format($stats['layananDiproses']) }}</p>
+
+                {{-- Kartu Masih Dalam Proses --}}
+                <div class="col-lg-6 col-md-6 col-6"> {{-- Kelas kolom diubah untuk layout 2x2 --}}
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="content-left">
+                                    <h5 class="card-title mb-1">Dalam Proses</h5>
+                                    <p class="card-subtitle small">Saat Ini</p>
+                                    <h4 class="mb-0 mt-3">{{ number_format($stats['layananDiproses']) }}</h4>
+                                </div>
+                                <div class="avatar">
+                                    <div class="avatar-initial bg-label-warning rounded">
+                                        <i class="ti ti-hourglass-low ti-28px"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="badge p-2 bg-label-success mb-3 rounded"><i class="ti ti-checks ti-28px"></i></div>
-                    <h5 class="card-title mb-1">Selesai</h5>
-                    <p class="card-subtitle">Total</p>
-                    <p class="text-heading mb-3 mt-1">{{ number_format($stats['layananSelesai']) }}</p>
+
+                {{-- Kartu Selesai --}}
+                <div class="col-lg-6 col-md-6 col-6"> {{-- Kelas kolom diubah untuk layout 2x2 --}}
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="content-left">
+                                    <h5 class="card-title mb-1">Selesai</h5>
+                                    <p class="card-subtitle small">Total Keseluruhan</p>
+                                    <h4 class="mb-0 mt-3">{{ number_format($stats['layananSelesai']) }}</h4>
+                                </div>
+                                <div class="avatar">
+                                    <div class="avatar-initial bg-label-success rounded">
+                                        <i class="ti ti-checks ti-28px"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-lg-2 col-md-3 col-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="badge p-2 bg-label-danger mb-3 rounded"><i class="ti ti-file-x ti-28px"></i></div>
-                    <h5 class="card-title mb-1">Permohonan Ditolak</h5>
-                    <p class="card-subtitle">Bulan Ini</p>
-                    <p class="text-heading mb-3 mt-1">{{ number_format($stats['permohonanDitolakBulanIni']) }}</p>
+
+                {{-- Kartu Ditolak --}}
+                <div class="col-lg-6 col-md-6 col-6"> {{-- Kelas kolom diubah untuk layout 2x2 --}}
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="content-left">
+                                    <h5 class="card-title mb-1">Ditolak</h5>
+                                    <p class="card-subtitle small">Bulan Ini</p>
+                                    <h4 class="mb-0 mt-3">{{ number_format($stats['permohonanDitolakBulanIni']) }}</h4>
+                                </div>
+                                <div class="avatar">
+                                    <div class="avatar-initial bg-label-danger rounded">
+                                        <i class="ti ti-file-x ti-28px"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,62 +344,72 @@
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between">
                     <div class="card-title mb-0">
-                        <h5 class="mb-1">Komposisi Kategori Layanan</h5>
-                        <p class="card-subtitle">Berdasarkan jumlah permohonan</p>
+                        <h5 class="mb-1">Artikel Terbaru</h5>
+                        <p class="card-subtitle">5 artikel yang baru saja ditambahkan</p>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-5 col-12">
-                            <div class="mt-lg-2 mb-lg-4 mb-2">
-                                <h2 class="mb-0">{{ number_format($stats['totalLayanan']) }}</h2>
-                                <p class="mb-0">Total Layanan</p>
-                            </div>
-                            <ul class="p-0 m-0">
-                                @foreach ($komposisiLayanan as $kategori)
-                                    <li class="d-flex gap-4 align-items-center mb-3 pb-1">
-                                        <div class="badge rounded bg-label-primary p-1_5"><i
-                                                class="ti ti-users ti-md"></i>
+                <div class="card-body pt-4">
+                    <ul class="list-unstyled mb-0">
+                        @forelse ($latestArticles as $article)
+                            <li class="mb-4">
+                                <div class="d-flex">
+                                    {{-- FOTO THUMBNAIL ARTIKEL --}}
+                                    <div class="flex-shrink-0 me-3">
+                                        <a href="{{ route('admin.article.show', ['article' => $article->slug]) }}">
+                                            <img src="{{ $article->thumbnail_url }}" alt="{{ $article->title }}"
+                                                class="rounded" style="width: 80px; height: 60px; object-fit: cover;">
+                                        </a>
+                                    </div>
+
+                                    <div class="flex-grow-1">
+                                        {{-- JUDUL ARTIKEL --}}
+                                        <h6 class="mb-1">
+                                            <a href="{{ route('admin.article.show', ['article' => $article->slug]) }}"
+                                                class="text-body">{{ $article->title }}</a>
+                                        </h6>
+
+                                        {{-- CUPLIKAN ISI --}}
+                                        <p class="text-muted mb-2" style="font-size: 0.9rem;">
+                                            {!! $article->preview_content !!}
+                                        </p>
+
+                                        {{-- META INFO: Penulis, Tanggal, dan Kategori --}}
+                                        <div class="d-flex align-items-center flex-wrap text-muted"
+                                            style="font-size: 0.8rem;">
+                                            {{-- Penulis dengan avatar kecil --}}
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-xs me-1">
+                                                    <img src="{{ $article->user->avatar_url ?? asset('assets/img/avatars/1.png') }}"
+                                                        alt="{{ $article->user->name ?? 'Admin' }}"
+                                                        class="rounded-circle">
+                                                </div>
+                                                <span>{{ $article->user->name ?? 'Admin' }}</span>
+                                            </div>
+
+                                            <span class="mx-2">•</span>
+                                            <span>{{ $article->formatted_published_date }}</span>
+                                            <span class="mx-2">•</span>
+
+                                            {{-- Badge Kategori --}}
+                                            <span
+                                                class="badge rounded-pill {{ $categoryBadges[$article->category] ?? 'bg-label-secondary' }}">
+                                                {{ $article->category ?? 'Lainnya' }}
+                                            </span>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-0 text-nowrap">{{ $kategori->nama_kategori }}</h6>
-                                            <small class="text-muted">{{ $kategori->permohonan_layanans_count }}
-                                                Permohonan</small>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <div class="col-md-7 col-12 d-flex align-items-center justify-content-center">
-                            <div id="serviceCompositionChart"></div>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
+                            </li>
+                        @empty
+                            <li class="text-center">
+                                <p class="text-muted">Belum ada artikel yang dipublikasikan.</p>
+                            </li>
+                        @endforelse
+                    </ul>
                 </div>
             </div>
         </div>
 
     </div>
 
-    {{-- Baris 3: Tabel Data --}}
-    <div class="row g-6 mt-1">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-datatable table-responsive">
-                    <table class="datatables-requests table table-sm">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th>Jenis Layanan</th>
-                                <th>Pemohon</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+
 @endsection

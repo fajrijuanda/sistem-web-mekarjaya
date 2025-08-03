@@ -23,6 +23,7 @@ class Penduduk extends Model
         'tanggal_lahir',
         'agama',
         'pekerjaan',
+        'no_hp'
     ];
 
     /**

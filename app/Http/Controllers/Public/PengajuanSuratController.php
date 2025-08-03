@@ -37,10 +37,27 @@ class PengajuanSuratController extends Controller
      */
     public function create(JenisLayanan $jenisLayanan)
     {
+        // ✅ DITAMBAHKAN: Helper untuk mendapatkan slug template dari LayananSurat controller
+        // (Anda perlu menyalin method getTemplateSlug dari LayananSurat.php ke controller ini,
+        // atau membuatnya dapat diakses secara global, contoh di bawah)
+        $templateSlug = $this->getTemplateSlugFromLayanan($jenisLayanan, null); // form_data masih null di sini
+
         return view('content.public.pages.surat.pengajuan-surat-form', [
             'pageConfigs' => ['myLayout' => 'front'],
             'layanan' => $jenisLayanan,
+            'template_slug' => $templateSlug, // ✅ Kirim slug ke view
         ]);
+    }
+
+    private function getTemplateSlugFromLayanan(JenisLayanan $jenisLayanan, ?array $formData): ?string
+    {
+        // Di halaman form, sub_jenis belum ada, jadi kita hanya ambil slug utama.
+        // Logika ini bisa diperluas jika form Anda memiliki pilihan sub_jenis.
+        $subJenis = $formData['sub_jenis'] ?? null;
+        if ($subJenis) {
+            return $jenisLayanan->slug . '-' . $subJenis;
+        }
+        return $jenisLayanan->slug;
     }
 
     /**
@@ -62,6 +79,7 @@ class PengajuanSuratController extends Controller
             'alamat' => 'required|string|max:255',
             'rt' => 'required|numeric|digits_between:1,3',
             'rw' => 'required|numeric|digits_between:1,3',
+            'foto_ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'keterangan_pemohon' => 'nullable|string',
         ];
 
@@ -97,32 +115,50 @@ class PengajuanSuratController extends Controller
                         'tanggal_lahir' => $request->input('tanggal_lahir'),
                         'agama' => $request->input('agama'),
                         'pekerjaan' => $request->input('pekerjaan'),
+                        'no_hp' => $request->input('no_hp'),
                     ]
                 );
-                $kodePermohonan = 'LY-' . now()->format('Ymd-His') . '-' . strtoupper(Str::random(4));
-                $berkasPaths = [];
-                if ($request->hasFile('berkas')) {
-                    foreach ($request->file('berkas') as $key => $file) {
-                        $path = $file->store("berkas_permohonan/{$kodePermohonan}", 'public');
-                        $berkasPaths[$key] = $path;
-                    }
-                }
-                return PermohonanLayanan::create([
-                    'kode_permohonan' => $kodePermohonan,
+                // 1. Buat permohonan terlebih dahulu untuk mendapatkan ID
+                $permohonanAwal = PermohonanLayanan::create([
+                    'kode_permohonan' => null, // Dibuat null
                     'penduduk_id' => $penduduk->id,
                     'jenis_layanan_id' => $jenisLayanan->id,
                     'status' => 'Diajukan',
                     'keterangan_pemohon' => $request->input('keterangan_pemohon'),
                     'form_data' => $request->input('form_data'),
-                    'berkas' => $berkasPaths,
+                    'berkas' => [], // Kosongkan dulu
                 ]);
+
+                // 2. Simpan berkas menggunakan ID permohonan yang baru dibuat
+                $berkasPaths = [];
+                if ($request->hasFile('foto_ktp')) {
+                    $path = $request->file('foto_ktp')->store("berkas_permohonan/{$permohonanAwal->id}", 'public');
+                    // Simpan dengan kunci 'foto-ktp' agar konsisten
+                    $berkasPaths['foto-ktp'] = $path;
+                }
+
+                if ($request->hasFile('berkas')) {
+                    foreach ($request->file('berkas') as $key => $file) {
+                        $path = $file->store("berkas_permohonan/{$permohonanAwal->id}", 'public');
+                        $berkasPaths[$key] = $path;
+                    }
+                }
+
+                // 3. Update record permohonan dengan path berkas
+                if (!empty($berkasPaths)) {
+                    $permohonanAwal->berkas = $berkasPaths;
+                    $permohonanAwal->save();
+                }
+
+                return $permohonanAwal;
             });
 
             // JIKA BERHASIL, KIRIM JSON SUKSES
             return response()->json([
-                'message' => "Permohonan untuk {$jenisLayanan->nama_layanan} dengan kode {$permohonan->kode_permohonan} telah berhasil dikirim!",
+                'message' => "Permohonan untuk {$jenisLayanan->nama_layanan} telah berhasil dikirim!",
                 'redirect_url' => route('public.pengajuan-surat.index')
             ]);
+
 
         } catch (\Exception $e) {
             Log::error('Gagal menyimpan permohonan: ' . $e->getMessage() . ' di baris ' . $e->getLine());

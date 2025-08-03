@@ -8,8 +8,11 @@ use App\Models\KategoriLayanan;
 use App\Models\KartuKeluarga;
 use App\Models\Penduduk;
 use App\Models\PermohonanLayanan;
+use App\Models\User;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Main extends Controller
 {
@@ -18,9 +21,27 @@ class Main extends Controller
      */
     public function index()
     {
+        $pengunjungBulanIni = Visitor::whereMonth('visit_date', now()->month)
+            ->whereYear('visit_date', now()->year)
+            ->count();
+
+        $pengunjungBulanLalu = Visitor::whereMonth('visit_date', now()->subMonth()->month)
+            ->whereYear('visit_date', now()->subMonth()->year)
+            ->count();
+
+        if ($pengunjungBulanLalu > 0) {
+            $persentasePerubahan = (($pengunjungBulanIni - $pengunjungBulanLalu) / $pengunjungBulanLalu) * 100;
+        } else {
+            $persentasePerubahan = $pengunjungBulanIni > 0 ? 100 : 0;
+        }
+
+
         // --- DATA STATISTIK YANG DIPERBARUI ---
         $stats = [
             // Layanan (untuk swiper)
+            'totalArtikel' => Article::count(),
+            'totalKategoriArtikel' => Article::whereNotNull('category')->distinct()->count('category'),
+            'totalPengguna' => User::count(),
             'totalLayanan' => PermohonanLayanan::count(),
             'layananSelesai' => PermohonanLayanan::where('status', 'Selesai')->count(),
             'layananDiproses' => PermohonanLayanan::where('status', 'Diproses')->count(),
@@ -37,11 +58,30 @@ class Main extends Controller
 
             // === STATISTIK BARU UNTUK WELCOME BANNER ===
             'artikelMingguIni' => Article::whereBetween('published_date', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-            'totalPembaca' => Article::sum('views'), // Mengambil total dari kolom 'views'
+            'totalPembaca' => Article::sum('views'),
+            'totalPengunjung' => Visitor::count(), // Total pengunjung unik sepanjang waktu
+            'pengunjungBulanIni' => $pengunjungBulanIni,
+            'persentasePerubahanPengunjung' => $persentasePerubahan,
         ];
 
-        // ... (sisa kode controller Anda tidak perlu diubah) ...
-        $komposisiLayanan = KategoriLayanan::withCount('permohonanLayanans')->get();
+        $pembacaPerKategori = Article::select(
+            // Ganti nilai NULL pada kolom 'category' menjadi 'Tanpa Kategori'
+            DB::raw("COALESCE(category, 'Tanpa Kategori') as category"),
+            DB::raw('SUM(views) as total_views')
+        )
+            ->where('views', '>', 0)
+            ->groupBy('category') // Tetap group by alias 'category'
+            ->orderBy('total_views', 'desc')
+            ->get();
+
+        $popularCategories = Article::select('category', DB::raw('SUM(views) as total_views'))
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->orderBy('total_views', 'desc')
+            ->limit(5) // Ambil 5 teratas
+            ->get();
+
+        $latestArticles = Article::with('user')->latest('published_date')->take(5)->get();        // ... (sisa kode controller Anda tidak perlu diubah) ...
         $trenData = [];
         for ($i = 5; $i >= 0; $i--) {
             $date = Carbon::now()->subMonths($i);
@@ -54,8 +94,10 @@ class Main extends Controller
         return view('content.admin.main.dashboard-main', [
             'pageConfigs' => ['myLayout' => 'horizontal'],
             'stats' => $stats,
-            'komposisiLayanan' => $komposisiLayanan,
             'trenData' => $trenData,
+            'latestArticles' => $latestArticles,
+            'pembacaPerKategori' => $pembacaPerKategori,
+            'popularCategories' => $popularCategories,
         ]);
     }
     /**

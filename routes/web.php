@@ -227,9 +227,9 @@ Route::middleware('auth')->group(function () {
 
     // Dashboard spesifik berdasarkan role (jika diperlukan)
     Route::get('/dashboard/utama', [Main::class, 'index'])->name('dashboard-utama');
-    Route::get('/dashboard/latest-requests', [Main::class, 'latestRequests'])->name('dashboard.latest-requests');
-    Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
-    Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
+    // Route::get('/dashboard/latest-requests', [Main::class, 'latestRequests'])->name('dashboard.latest-requests');
+    // Route::get('/dashboard/pelayanan', [PublicService::class, 'index'])->name('dashboard-pelayanan');
+    // Route::get('/dashboard/konten', [Content::class, 'index'])->name('dashboard-konten');
 
     // Konten Website (Admin)
     Route::prefix('admin')->name('admin.')->group(function () { // Mengelompokkan routes admin dengan prefix 'admin'
@@ -246,17 +246,18 @@ Route::middleware('auth')->group(function () {
         Route::get('/profil/desa', [ProfileDesaController::class, 'index'])->name('profil-desa-website'); // Diubah menjadi /admin/profil/desa
         Route::post('/profil/desa/update', [ProfileDesaController::class, 'update'])->name('profil-desa-update');
         // Administrasi
-        Route::get('/layanan', [LayananSurat::class, 'LayananSurat'])->name('administrasi-layanan');
-        Route::get('/layanan-surat', [LayananSurat::class, 'index'])->name('admin.layanan-surat.index');
-        Route::get('/layanan-surat/list', [LayananSurat::class, 'list'])->name('admin.layanan-surat.list');
+        Route::get('/layanan-surat', [LayananSurat::class, 'index'])->name('administrasi-layanan-surat');
+        Route::get('/layanan-surat/list', [LayananSurat::class, 'list'])->name('administrasi-layanan-surat.list');
         Route::get('/layanan-surat/detail/{id}', [LayananSurat::class, 'show'])->name('admin.layanan-surat.show');
         Route::put('/layanan-surat/update/{id}', [LayananSurat::class, 'update'])->name('admin.layanan-surat.update');
         Route::delete('/layanan-surat/{id}', [LayananSurat::class, 'destroy'])->name('admin.layanan-surat.destroy');
         Route::get('/layanan-surat/print/{id}', [LayananSurat::class, 'print'])->name('admin.layanan-surat.print');
         Route::get('/layanan-surat/word/{id}', [LayananSurat::class, 'downloadWord'])->name('admin.layanan-surat.word');
         Route::get('/arsip', [ArsipDokumen::class, 'index'])->name('administrasi-arsip');
-
-
+        Route::post('/arsip', [ArsipDokumen::class, 'store'])->name('administrasi-arsip.store');
+        Route::delete('/arsip/{arsip}', [ArsipDokumen::class, 'destroy'])->name('administrasi-arsip.destroy');
+        Route::get('/arsip/{arsip}', [ArsipDokumen::class, 'show'])->name('administrasi-arsip.show');
+        Route::post('/arsip/{arsip}', [ArsipDokumen::class, 'update'])->name('administrasi-arsip.update');
     });
 
     // User Management

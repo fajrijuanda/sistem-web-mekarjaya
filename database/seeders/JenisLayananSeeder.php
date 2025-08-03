@@ -15,24 +15,15 @@ class JenisLayananSeeder extends Seeder
      */
     public function run(): void
     {
-        // Pastikan KategoriLayananSeeder sudah dijalankan sebelumnya.
-        // Jika belum, data kategori mungkin tidak ditemukan.
-        // Disarankan untuk menambahkan kategori baru di KategoriLayananSeeder.
+        // Mengambil atau membuat kategori layanan
         $kependudukanId = KategoriLayanan::firstOrCreate(['nama_kategori' => 'Kependudukan & Pernikahan'])->id;
         $usahaId = KategoriLayanan::firstOrCreate(['nama_kategori' => 'Perizinan & Usaha'])->id;
         $sosialId = KategoriLayanan::firstOrCreate(['nama_kategori' => 'Layanan Sosial'])->id;
-        $pertanahanId = KategoriLayanan::firstOrCreate(['nama_kategori' => 'Pertanahan'])->id;
         $lainnyaId = KategoriLayanan::firstOrCreate(['nama_kategori' => 'Lain-lain'])->id;
 
 
         $jenisLayanan = [
             // === Kategori: Kependudukan & Pernikahan ===
-            [
-                'kategori_layanan_id' => $kependudukanId,
-                'nama_layanan' => 'Surat Pengantar Nikah',
-                'deskripsi' => 'Surat pengantar untuk keperluan administrasi pernikahan di KUA.',
-                'slug' => 'surat-pengantar-nikah'
-            ],
             [
                 'kategori_layanan_id' => $kependudukanId,
                 'nama_layanan' => 'Surat Keterangan Domisili',
@@ -44,6 +35,12 @@ class JenisLayananSeeder extends Seeder
                 'nama_layanan' => 'Surat Keterangan Kelahiran',
                 'deskripsi' => 'Surat keterangan untuk keperluan pembuatan akta kelahiran.',
                 'slug' => 'surat-kelahiran'
+            ],
+            [
+                'kategori_layanan_id' => $kependudukanId,
+                'nama_layanan' => 'Surat Keterangan Kematian',
+                'deskripsi' => 'Surat keterangan untuk keperluan administrasi setelah seseorang meninggal dunia.',
+                'slug' => 'surat-kematian'
             ],
             [
                 'kategori_layanan_id' => $kependudukanId,
@@ -59,21 +56,9 @@ class JenisLayananSeeder extends Seeder
             ],
             [
                 'kategori_layanan_id' => $kependudukanId,
-                'nama_layanan' => 'Formulir Permohonan Pindah Datang WNI',
-                'deskripsi' => 'Formulir untuk mengurus kepindahan penduduk antar wilayah.',
-                'slug' => 'permohonan-pindah-datang'
-            ],
-            [
-                'kategori_layanan_id' => $kependudukanId,
                 'nama_layanan' => 'Surat Pengantar SKCK',
                 'deskripsi' => 'Surat pengantar untuk pembuatan Surat Keterangan Catatan Kepolisian.',
                 'slug' => 'pengantar-skck'
-            ],
-            [
-                'kategori_layanan_id' => $kependudukanId,
-                'nama_layanan' => 'Surat Pengantar Pembuatan Paspor',
-                'deskripsi' => 'Surat pengantar dari desa untuk keperluan pembuatan paspor.',
-                'slug' => 'pembuatan-paspor'
             ],
 
 
@@ -100,59 +85,7 @@ class JenisLayananSeeder extends Seeder
                 'slug' => 'surat-tidak-mampu'
             ],
 
-
-            // === Kategori: Pertanahan ===
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Keterangan Waris',
-                'deskripsi' => 'Surat untuk menyatakan dan mengesahkan para ahli waris yang sah.',
-                'slug' => 'keterangan-waris'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Pelimpahan Hak Waris',
-                'deskripsi' => 'Surat untuk memindahkan hak waris dari satu ahli waris ke yang lainnya.',
-                'slug' => 'pelimpahan-hak-waris'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Pernyataan Jual Beli Tanah',
-                'deskripsi' => 'Surat pernyataan transaksi jual beli tanah sebelum dibuatkan akta resmi.',
-                'slug' => 'jual-beli-tanah'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Pernyataan Tanah Tidak Sengketa',
-                'deskripsi' => 'Surat pernyataan bahwa sebidang tanah tidak dalam sengketa apapun.',
-                'slug' => 'tanah-tidak-sengketa'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Keterangan Riwayat Tanah',
-                'deskripsi' => 'Surat yang menjelaskan sejarah kepemilikan sebidang tanah.',
-                'slug' => 'keterangan-riwayat-tanah'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Pernyataan Kepemilikan Tanah',
-                'deskripsi' => 'Surat pernyataan resmi seseorang atas kepemilikan sebidang tanah.',
-                'slug' => 'pernyataan-kepemilikan-tanah'
-            ],
-            [
-                'kategori_layanan_id' => $pertanahanId,
-                'nama_layanan' => 'Surat Keterangan Beda Luas Tanah',
-                'deskripsi' => 'Surat yang menerangkan perbedaan luas tanah antara dokumen dan fisik.',
-                'slug' => 'keterangan-beda-luas-tanah'
-            ],
-
-
             // === Kategori: Lain-lain ===
-            [
-                'kategori_layanan_id' => $lainnyaId,
-                'nama_layanan' => 'Surat Kuasa',
-                'deskripsi' => 'Surat pemberian wewenang atau kuasa dari satu pihak ke pihak lain.',
-                'slug' => 'surat-kuasa'
-            ],
             [
                 'kategori_layanan_id' => $lainnyaId,
                 'nama_layanan' => 'Pernyataan Tidak Keberatan',
@@ -163,13 +96,15 @@ class JenisLayananSeeder extends Seeder
         ];
 
         foreach ($jenisLayanan as $layanan) {
-            // Menggunakan updateOrCreate untuk menghindari duplikasi data.
-            // Data akan dicari berdasarkan 'slug', jika ditemukan akan diupdate,
-            // jika tidak, akan dibuat data baru.
+            // Mencari berdasarkan 'slug', jika ada diupdate, jika tidak ada dibuat baru.
             JenisLayanan::updateOrCreate(
-                ['slug' => $layanan['slug']], // Kunci unik untuk pencarian
-                $layanan // Data untuk dibuat atau diupdate
+                ['slug' => $layanan['slug']], // Kunci unik
+                $layanan // Data
             );
         }
+
+        // Hapus data lama yang tidak ada di daftar baru (termasuk Surat Kuasa)
+        $slugsToKeep = array_column($jenisLayanan, 'slug');
+        JenisLayanan::whereNotIn('slug', $slugsToKeep)->delete();
     }
 }

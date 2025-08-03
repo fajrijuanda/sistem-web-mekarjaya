@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Cetak - {{ $permohonan->kode_permohonan }}</title>
+    <title>Cetak - {{ $permohonan->kode_permohonan ?? 'Surat Pernyataan' }}</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -37,10 +37,6 @@
             margin-bottom: 0.25rem;
         }
 
-        .mb-3 {
-            margin-bottom: 1rem;
-        }
-
         .mb-4 {
             margin-bottom: 1.5rem;
         }
@@ -59,7 +55,7 @@
         }
 
         td {
-            padding: 2px 0;
+            padding: 1px 0;
             vertical-align: top;
         }
 
@@ -67,13 +63,14 @@
             text-decoration: underline;
         }
 
-        /* CSS Baru untuk perataan teks */
-        .text-justify {
+        p {
             text-align: justify;
+            text-indent: 50px;
+            margin: 0 0 1rem 0;
         }
 
-        .indent {
-            text-indent: 50px;
+        .no-indent {
+            text-indent: 0;
         }
     </style>
 </head>
@@ -82,10 +79,10 @@
     <div class="container">
         <div class="text-center mb-4">
             <h4 class="text-uppercase fw-bold mb-1"><u>Surat Pernyataan Tidak Keberatan</u></h4>
-            <p class="mb-0">Nomor: {{ $permohonan->kode_permohonan }}</p>
+            <p class="mb-0 no-indent">Nomor: {{ $permohonan->kode_permohonan ?? '-' }}</p>
         </div>
 
-        <p>Yang bertanda tangan dibawah ini:</p>
+        <p class="no-indent">Yang bertanda tangan dibawah ini:</p>
         <table>
             <tr>
                 <td style="width: 30%;">Nama</td>
@@ -106,8 +103,8 @@
             </tr>
         </table>
 
-        <p class="mt-4 text-justify indent">Menyatakan dengan sesungguhnya, bahwa saya tidak keberatan Kartu Keluarga
-            (KK) saya dipergunakan oleh saudara/pihak di bawah ini:</p>
+        <p class="mt-4">Menyatakan dengan sesungguhnya, bahwa saya tidak keberatan Kartu Keluarga (KK) saya
+            dipergunakan oleh saudara/pihak di bawah ini:</p>
         <table>
             <tr>
                 <td style="width: 30%;">Nama</td>
@@ -129,22 +126,19 @@
             </tr>
         </table>
 
-        <p class="mt-4 text-justify indent">Adapun tujuan penggunaan tersebut adalah untuk: <br>
-            {{-- Tag <strong> dihilangkan agar tidak tebal --}}
-            <span
-                style="display:block; margin-top: 0.5rem;">{{ $permohonan->form_data['pernyataan']['isi'] ?? 'Tidak ada keterangan.' }}</span>
-        </p>
+        <p class="mt-4">Adapun tujuan penggunaan tersebut adalah untuk:</p>
+        <p>Bahwa saya tidak keberatan Kartu Keluarga (KK) saya Nomor:
+            <strong>{{ $permohonan->penduduk->kartuKeluarga->nomor_kk }}</strong> dipergunakan oleh adik kandung saya
+            tersebut di atas untuk {{ $permohonan->form_data['pernyataan_kk']['isi'] ?? '-' }}</p>
 
-        <p class="mt-4 text-justify indent">Demikian pernyaan ini saya buat dengan sebenarnya, apabila pernyataan ini
-            tidak sesuai dengan sebenarnya, saya siap untuk diproses sebagaimana hukum yang berlaku.</p>
+        <p class="mt-4">Demikian pernyaan ini saya buat dengan sebenarnya, apabila pernyataan ini tidak sesuai dengan
+            sebenarnya, saya siap untuk diproses sebagaimana hukum yang berlaku.</p>
 
-        <div style="width: 35%; margin-left: 65%; text-align: center;" class="mt-5">
-            <p class="mb-5">Telukjambe, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }} <br> Yang Membuat
-                Pernyataan,</p>
-            {{-- Menambahkan Materai --}}
-            <p class="mb-5">Materai 6000</p>
-            <p class="fw-bold text-uppercase" style="margin-top: 80px;"><u>( {{ $permohonan->penduduk->nama_lengkap }}
-                    )</u></p>
+        <div style="width: 40%; margin-left: 60%; text-align: left;" class="mt-5">
+            <p class="no-indent">Mekarjaya, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+            <p class="no-indent">Yang Membuat Pernyataan,</p>
+            <p class="no-indent" style="margin-top: 80px; margin-bottom: 0;"><strong><u>(
+                        {{ strtoupper($permohonan->penduduk->nama_lengkap) }} )</u></strong></p>
         </div>
     </div>
 </body>

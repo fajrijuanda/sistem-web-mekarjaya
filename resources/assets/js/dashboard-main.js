@@ -155,45 +155,98 @@
   // --------------------------------------------------------------------
   const trafficSourceChartEl = document.querySelector('#trafficSourceChart');
   if (typeof trafficSourceChartEl !== 'undefined' && trafficSourceChartEl !== null) {
-    const trafficSourceChartConfig = {
-      chart: { height: 170, width: 150, parentHeightOffset: 0, type: 'donut' },
-      labels: ['Google', 'Facebook', 'Direct', 'Lainnya'],
-      series: [45, 25, 20, 10], // Data dummy
-      colors: [config.colors.primary, config.colors.info, config.colors.success, config.colors.secondary],
-      stroke: { width: 0 },
-      dataLabels: { enabled: false },
-      legend: { show: false },
-      tooltip: { theme: false },
-      grid: { padding: { top: 0 } },
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '70%',
-            labels: {
-              show: true,
-              value: {
-                fontSize: '1.125rem',
-                fontFamily: 'Public Sans',
-                color: headingColor,
-                fontWeight: 500,
-                offsetY: -20,
-                formatter: val => parseInt(val) + '%'
-              },
-              name: { offsetY: 20, fontFamily: 'Public Sans' },
-              total: { show: true, fontSize: '.9375rem', label: 'Total', color: labelColor, formatter: w => '15.2k' } // Data dummy
+    // 1. Siapkan data dari PHP, pastikan tidak error jika kosong
+    const labels = typeof sumberPengunjungData !== 'undefined' ? sumberPengunjungData.map(item => item.category) : [];
+    const series =
+      typeof sumberPengunjungData !== 'undefined' ? sumberPengunjungData.map(item => parseInt(item.total_views)) : [];
+
+    // 2. Hitung total untuk kalkulasi persentase nanti
+    const totalViews = series.reduce((a, b) => a + b, 0);
+
+    if (totalViews === 0) {
+      trafficSourceChartEl.innerHTML = `<div class="d-flex justify-content-center align-items-center h-100"><p class="text-muted mt-6">Belum ada data</p></div>`;
+    } else {
+      // Helper untuk format angka besar (misal: 1200 -> 1.2k)
+      const formatAngka = num => (num >= 1000 ? (num / 1000).toFixed(1) + 'k' : num);
+
+      // ✅ TAMBAHAN: DETEKSI TEMA (TERANG/GELAP)
+      const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+      // --- KONFIGURASI CHART YANG SUDAH DIPERBAIKI ---
+      const trafficSourceChartConfig = {
+        chart: {
+          height: 170,
+          width: 150,
+          parentHeightOffset: 0,
+          type: 'donut'
+        },
+        labels: labels,
+        series: series,
+        colors: ['#696cff', '#03c3ec', '#71dd37', '#ffab00', '#ff3e1d'],
+        stroke: { width: 0 },
+        dataLabels: { enabled: false },
+        legend: { show: false },
+
+        // ✅ PERBAIKAN: SESUAIKAN TEMA TOOLTIP
+        tooltip: {
+          enabled: true,
+          fillSeriesColor: false,
+          // 'dark' untuk teks putih, 'light' untuk teks hitam.
+          theme: isDarkMode ? 'dark' : 'light'
+        },
+
+        grid: { padding: { top: 0 } },
+        plotOptions: {
+          pie: {
+            donut: {
+              size: '70%',
+              labels: {
+                show: true,
+                value: {
+                  fontSize: '1.125rem',
+                  fontFamily: 'Public Sans',
+                  // ✅ PERBAIKAN: Ganti warna sesuai tema
+                  color: isDarkMode ? '#cfd3ec' : '#566a7f',
+                  fontWeight: 500,
+                  offsetY: -20,
+                  formatter: function (val) {
+                    const percentage = totalViews > 0 ? (parseInt(val) / totalViews) * 100 : 0;
+                    return percentage.toFixed(0) + '%';
+                  }
+                },
+                name: {
+                  offsetY: 20,
+                  fontFamily: 'Public Sans'
+                },
+                total: {
+                  show: true,
+                  fontSize: '.9375rem',
+                  label: 'Total',
+                  // ✅ PERBAIKAN: Ganti warna sesuai tema
+                  color: isDarkMode ? '#b4b9c1' : '#a1acb8',
+                  formatter: function (w) {
+                    const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                    return formatAngka(total);
+                  }
+                }
+              }
             }
           }
         }
-      }
-    };
-    const trafficSourceChart = new ApexCharts(trafficSourceChartEl, trafficSourceChartConfig);
-    trafficSourceChart.render();
+      };
+      const trafficSourceChart = new ApexCharts(trafficSourceChartEl, trafficSourceChartConfig);
+      trafficSourceChart.render();
+    }
   }
-
   // Grafik Kategori Paling Populer (Horizontal Bar)
   // --------------------------------------------------------------------
   const popularCategoriesChartEl = document.querySelector('#popularCategoriesChart');
   if (typeof popularCategoriesChartEl !== 'undefined' && popularCategoriesChartEl !== null) {
+    // ✅ PERBAIKAN: Proses data dinamis dari PHP
+    const categories = popularCategoriesData.map(item => item.category);
+    const views = popularCategoriesData.map(item => item.total_views);
+    const totalViews = views.reduce((a, b) => a + b, 0);
+
     const popularCategoriesChartConfig = {
       chart: { height: 320, type: 'bar', toolbar: { show: false } },
       plotOptions: {
@@ -216,30 +269,45 @@
       dataLabels: {
         enabled: true,
         style: { colors: ['#fff'], fontWeight: 500, fontSize: '13px', fontFamily: 'Public Sans' },
-        formatter: (val, opts) => popularCategoriesChartConfig.labels[opts.dataPointIndex],
+        formatter: (val, opts) => categories[opts.dataPointIndex], // Tampilkan nama kategori di dalam bar
         offsetX: 0,
         dropShadow: { enabled: false }
       },
-      labels: ['Berita Desa', 'Pengumuman', 'UMKM', 'Kesehatan', 'Kegiatan'], // Data dummy
-      series: [{ data: [42, 35, 22, 18, 11] }], // Data dummy
+      // ✅ PERBAIKAN: Gunakan data dinamis
+      labels: categories,
+      series: [{ data: views }],
       xaxis: {
-        categories: ['42%', '35%', '22%', '18%', '11%'],
+        categories: views.map(v => {
+          const percentage = totalViews > 0 ? ((v / totalViews) * 100).toFixed(0) : 0;
+          return `${percentage}%`; // Tampilkan persentase di sumbu X
+        }),
         axisBorder: { show: false },
         axisTicks: { show: false },
         labels: { style: { colors: labelColor, fontSize: '13px' }, formatter: val => `${val}` }
       },
-      yaxis: { max: 45, labels: { style: { colors: [labelColor], fontFamily: 'Public Sans', fontSize: '13px' } } },
+      yaxis: {
+        max: Math.max(...views) * 1.1, // Atur batas maksimal y-axis secara dinamis
+        labels: { style: { colors: [labelColor], fontFamily: 'Public Sans', fontSize: '13px' } }
+      },
       tooltip: {
         enabled: true,
         style: { fontSize: '12px' },
         onDatasetHover: { highlightDataSeries: false },
+        // Tampilkan jumlah views saat di-hover
         custom: ({ series, seriesIndex, dataPointIndex, w }) =>
           '<div class="px-3 py-2"><span>' + series[seriesIndex][dataPointIndex] + ' Dilihat</span></div>'
       },
       legend: { show: false }
     };
-    const popularCategoriesChart = new ApexCharts(popularCategoriesChartEl, popularCategoriesChartConfig);
-    popularCategoriesChart.render();
+
+    // Hanya render chart jika ada data
+    if (popularCategoriesData && popularCategoriesData.length > 0) {
+      const popularCategoriesChart = new ApexCharts(popularCategoriesChartEl, popularCategoriesChartConfig);
+      popularCategoriesChart.render();
+    } else {
+      popularCategoriesChartEl.innerHTML =
+        '<div class="d-flex justify-content-center align-items-center h-100"><p class="text-muted mt-4">Belum ada data</p></div>';
+    }
   }
 
   // Tabel Permohonan Layanan Terbaru (DataTable)

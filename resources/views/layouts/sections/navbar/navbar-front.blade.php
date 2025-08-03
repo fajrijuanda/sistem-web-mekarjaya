@@ -1,5 +1,6 @@
 @php
     use Illuminate\Support\Facades\Route;
+    use Illuminate\Support\Str;
     $currentRouteName = Route::currentRouteName();
 @endphp
 <!-- Navbar: Start -->
@@ -15,7 +16,7 @@
                     <i class="ti ti-menu-2 ti-lg align-middle text-heading fw-medium"></i>
                 </button>
                 <!-- Mobile menu toggle: End-->
-                <a href="{{ url('front-pages/landing') }}" class="app-brand-link">
+                <a href="{{ url('/') }}" class="app-brand-link">
                     <span class="app-brand-logo demo">@include('_partials.macros', ['height' => 20, 'withbg' => 'fill: #fff;'])</span>
                     <span
                         class="app-brand-text demo menu-text fw-bold ms-2 ps-1">{{ config('variables.templateName') }}</span>
@@ -41,7 +42,7 @@
                     <li class="nav-item">
                         <a class="nav-link fw-medium {{ $currentRouteName === 'pages-profil-desa' ? 'active' : '' }}"
                             aria-current="page" href="{{ url('/profil-desa') }}">
-                            <i class="ti ti-info-circle me-1"></i>Profile Desa
+                            <i class="ti ti-info-circle me-1"></i>Profil Desa
                         </a>
                     </li>
                     <li class="nav-item">
@@ -59,8 +60,8 @@
                     </li>
                     {{-- pengajuan surat --}}
                     <li class="nav-item">
-                        <a class="nav-link fw-medium {{ $currentRouteName === 'public.pengajuan-surat.index' ? 'active' : '' }}"
-                            href="{{ url('/pengajuan-surat') }}">
+                        <a class="nav-link fw-medium {{ Str::startsWith($currentRouteName, 'public.pengajuan-surat') ? 'active' : '' }}"
+                            href="{{ route('public.pengajuan-surat.index') }}">
                             <i class="ti ti-file-text me-1"></i>Pengajuan Surat
                         </a>
                     </li>
@@ -73,9 +74,21 @@
 
                 <!-- navbar button: Start -->
                 <li>
-                    <a href="{{ url('/login') }}" class="btn btn-primary" target="_blank"><span
-                            class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span><span
-                            class="d-none d-md-block">Login</span></a>
+                    {{-- ✅ LOGIKA BARU DIMULAI DI SINI --}}
+                    @auth
+                        {{-- Jika pengguna sudah login, tampilkan tombol ini --}}
+                        <a href="{{ route('dashboard-utama') }}" class="btn btn-primary">
+                            <span class="tf-icons ti ti-layout-dashboard scaleX-n1-rtl me-md-1"></span>
+                            <span class="d-none d-md-block">Halaman Admin</span>
+                        </a>
+                    @else
+                        {{-- Jika pengguna belum login, tampilkan tombol ini --}}
+                        <a href="{{ url('/login') }}" class="btn btn-primary" target="_blank">
+                            <span class="tf-icons ti ti-login scaleX-n1-rtl me-md-1"></span>
+                            <span class="d-none d-md-block">Login</span>
+                        </a>
+                    @endauth
+                    {{-- ✅ LOGIKA BARU BERAKHIR DI SINI --}}
                 </li>
                 <!-- navbar button: End -->
             </ul>

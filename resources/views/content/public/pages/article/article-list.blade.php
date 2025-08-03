@@ -1,13 +1,14 @@
 @php
     $configData = Helper::appClasses();
 
-    // ✅ LANGKAH 1: Definisikan pemetaan warna untuk setiap category
     $categoryBadges = [
         'Berita Desa' => 'bg-label-primary',
         'Kesehatan' => 'bg-label-danger',
         'UMKM' => 'bg-label-success',
         'Pengumuman' => 'bg-label-info',
         'Kegiatan' => 'bg-label-warning',
+        'Teknologi' => 'bg-label-dark', // Contoh tambahan
+        // Tambahkan kategori lain jika perlu
     ];
 @endphp
 @extends('layouts/layoutMaster')
@@ -194,7 +195,7 @@
                 <h2 class="hero-sub-title h6">
                     {{ $dataProfil['hero']['subtitle'] ??
                         'Temukan berbagai informasi menarik dan berita terkini seputar desa kami. Dari kegiatan komunitas hingga
-                                                                                                                            laporan pembangunan, kami hadirkan untuk Anda.' }}
+                                                                                                                                                laporan pembangunan, kami hadirkan untuk Anda.' }}
                 </h2>
             </div>
         </div>

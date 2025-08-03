@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
       AdminKontenSeeder::class,
       KategoriLayananSeeder::class,
       JenisLayananSeeder::class,
+      ProfilDesaSeeder::class,
     ]);
 
     User::factory(10)->create();

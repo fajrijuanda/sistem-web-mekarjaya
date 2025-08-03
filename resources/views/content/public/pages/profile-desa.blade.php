@@ -334,7 +334,7 @@
             </div>
         </section>
 
-        <section id="landingContact" class="section-py bg-body landing-contact">
+        {{-- <section id="landingContact" class="section-py bg-body landing-contact">
             <div class="container">
                 <div class="text-center mb-4">
                     <span class="badge bg-label-primary" contenteditable="true"
@@ -425,6 +425,6 @@
                 </div>
 
             </div>
-        </section>
+        </section> --}}
     </div>
 @endsection

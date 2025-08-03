@@ -250,6 +250,8 @@
                                             <option value="UMKM" @selected(old('category', $article->category) == 'UMKM')>UMKM</option>
                                             <option value="Kesehatan" @selected(old('category', $article->category) == 'Kesehatan')>Kesehatan</option>
                                             <option value="Kegiatan" @selected(old('category', $article->category) == 'Kegiatan')>Kegiatan</option>
+                                            {{-- teknologi --}}
+                                            <option value="Teknologi" @selected(old('category', $article->category) == 'Teknologi')>Teknologi</option>
                                         </select>
                                         @error('category')
                                             <div class="invalid-feedback">{{ $message }}</div>

@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->date('tanggal_lahir');
             $table->string('agama');
             $table->string('pekerjaan');
+            $table->string('no_hp', 20)->nullable();
             // Tambahkan kolom lain yang relevan sesuai kebutuhan (status perkawinan, pendidikan, dll)
             $table->timestamps();
         });

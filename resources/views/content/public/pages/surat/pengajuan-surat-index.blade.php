@@ -38,7 +38,7 @@
             display: none;
         }
 
-        /* Card Layanan Baru */
+        /* Card Layanan (Menggunakan variabel HSL untuk warna unik) */
         .service-card {
             display: flex;
             flex-direction: column;
@@ -50,30 +50,49 @@
             background-color: #fff;
             height: 100%;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+            /* Mendefinisikan warna utama kartu menggunakan variabel HSL */
+            --service-color: hsl(var(--h, 210), var(--s, 75%), var(--l, 55%));
         }
 
         .service-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 10px 30px rgba(var(--bs-primary-rgb), 0.12);
-            border-color: rgba(var(--bs-primary-rgb), 0.6);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            /* Bayangan hover generik */
+            border-color: var(--service-color);
+            /* Bingkai hover sesuai warna kartu */
         }
 
         .service-icon {
             font-size: 2.5rem;
-            color: var(--bs-primary);
+            color: var(--service-color);
             margin-bottom: 1rem;
             padding: 1rem;
-            background-color: rgba(var(--bs-primary-rgb), 0.1);
+            background-color: hsl(var(--h, 210) var(--s, 75%) var(--l, 55%) / 0.1);
             border-radius: 50%;
             margin-left: auto;
             margin-right: auto;
             line-height: 1;
         }
 
+        .service-card .btn-primary {
+            background-color: var(--service-color) !important;
+            border-color: var(--service-color) !important;
+            width: 100%;
+            margin-top: auto;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+
+        .service-card .btn-primary:hover {
+            --l-hover: calc(var(--l, 55%) - 8%);
+            background-color: hsl(var(--h, 210), var(--s, 75%), var(--l-hover)) !important;
+            border-color: hsl(var(--h, 210), var(--s, 75%), var(--l-hover)) !important;
+        }
+
         .service-card h6 {
             margin-bottom: 0.5rem;
             font-weight: 600;
             font-size: 1.1rem;
+            color: #3a3541;
         }
 
         .service-card p {
@@ -83,9 +102,24 @@
             flex-grow: 1;
         }
 
-        .service-card .btn {
-            width: 100%;
-            margin-top: auto;
+        /* Tampilan khusus untuk elemen kartu Surat Kematian (Tema Abu-abu) */
+        .service-card--theme-dark {
+            /* Mengubah variabel warna menjadi abu-abu gelap */
+            --h: 210;
+            --s: 10%;
+            --l: 25%;
+        }
+
+        /* Card Informasi Tambahan */
+        .info-card {
+            border-style: dashed;
+            border-width: 2px;
+            background-color: var(--bs-light-bg-subtle);
+        }
+
+        .info-card .service-icon {
+            color: var(--bs-secondary);
+            background-color: var(--bs-secondary-bg);
         }
 
         /* Animasi untuk filter */
@@ -99,6 +133,7 @@
             opacity: 0;
             transform: scale(0.95);
             pointer-events: none;
+            position: absolute;
         }
     </style>
 @endsection
@@ -110,38 +145,23 @@
 
 @section('content')
     @php
-        // Pemetaan slug ke ikon Tabler yang lebih variatif
+        // Pemetaan slug ke ikon Tabler
         $iconMap = [
-            // Kependudukan & Pernikahan
-            'surat-pengantar-nikah' => 'ti-heart-handshake', // 💍
-            'surat-domisili' => 'ti-home-2', // 🏠
-            'surat-kelahiran' => 'ti-baby-carriage', // 👶
+            'surat-domisili' => 'ti-home-2',
+            'surat-kelahiran' => 'ti-baby-carriage',
+            'surat-kematian' => 'ti-coffin',
             'surat-sudah-menikah' => 'ti-user-check',
             'surat-belum-pernah-menikah' => 'ti-user-off',
-            'permohonan-pindah-datang' => 'ti-truck-delivery', // 🚚
-            'pengantar-skck' => 'ti-shield-lock', // 🛡️
-            'pembuatan-paspor' => 'ti-world', // 🌍
-
-            // Perizinan & Usaha
-            'surat-keterangan-usaha' => 'ti-building-store', // 🏪
-            'surat-domisili-usaha' => 'ti-map-pin', // 📍
-
-            // Layanan Sosial
-            'surat-tidak-mampu' => 'ti-coin-off', // 💰❌
-
-            // Pertanahan
-            'keterangan-waris' => 'ti-users-group',
-            'pelimpahan-hak-waris' => 'ti-transform',
-            'jual-beli-tanah' => 'ti-transfer-in', // 💸
-            'tanah-tidak-sengketa' => 'ti-file-check',
-            'keterangan-riwayat-tanah' => 'ti-history', // 📜
-            'pernyataan-kepemilikan-tanah' => 'ti-file-certificate',
-            'keterangan-beda-luas-tanah' => 'ti-arrows-split-2',
-
-            // Lain-lain
-            'surat-kuasa' => 'ti-signature', // ✍️
-            'pernyataan-tidak-keberatan' => 'ti-thumb-up', // 👍
+            'pengantar-skck' => 'ti-shield-lock',
+            'surat-keterangan-usaha' => 'ti-building-store',
+            'surat-domisili-usaha' => 'ti-map-pin',
+            'surat-tidak-mampu' => 'ti-coin-off',
+            'pernyataan-tidak-keberatan' => 'ti-thumb-up',
         ];
+
+        // Hitung total layanan untuk membagi roda warna secara merata
+        $totalServices = collect($kategoriLayanan)->sum(fn($k) => $k->jenisLayanan->count());
+        $hueStep = $totalServices > 0 ? 360 / $totalServices : 0;
     @endphp
     <div data-bs-spy="scroll" class="scrollspy-example">
 
@@ -181,12 +201,29 @@
                 </div>
 
                 <div class="row g-4" id="service-grid">
+                    @php $cardIndex = 0; @endphp
                     @forelse($kategoriLayanan as $kategori)
                         @foreach ($kategori->jenisLayanan as $layanan)
+                            @php
+                                $isThemeDark = $layanan->slug === 'surat-kematian';
+                                $hue = round($cardIndex * $hueStep);
+
+                                // Aturan khusus untuk menggeser warna agar tidak mirip
+                                if (!$isThemeDark) {
+                                    if ($layanan->slug === 'surat-belum-pernah-menikah') {
+                                        $hue = ($hue + 180) % 360;
+                                    } elseif ($layanan->slug === 'pernyataan-tidak-keberatan') {
+                                        $hue = ($hue + 90) % 360;
+                                    }
+                                }
+
+                                $cardIndex++;
+                            @endphp
                             <div class="col-md-6 col-lg-4 service-item-col"
                                 data-category="{{ Str::slug($kategori->nama_kategori) }}">
-                                <div class="service-card">
-                                    {{-- Ikon diubah menjadi dinamis berdasarkan slug --}}
+                                {{-- Beri class khusus jika ini kartu kematian, JIKA TIDAK, baru atur style HSL --}}
+                                <div class="service-card {{ $isThemeDark ? 'service-card--theme-dark' : '' }}"
+                                    @if (!$isThemeDark) style="--h: {{ $hue }}; --s: 75%; --l: 55%;" @endif>
                                     <i class="ti {{ $iconMap[$layanan->slug] ?? 'ti-file-text' }} service-icon"></i>
                                     <h6 class="fw-semibold">{{ $layanan->nama_layanan }}</h6>
                                     <p>{{ $layanan->deskripsi ?? 'Ajukan surat ini secara online.' }}</p>
@@ -202,6 +239,19 @@
                             <p class="text-muted">Saat ini belum ada layanan surat yang tersedia.</p>
                         </div>
                     @endforelse
+
+                    {{-- Card Informasi Tambahan (Selalu Terlihat) --}}
+                    <div class="col-md-6 col-lg-4 service-item-col" data-category="all-info">
+                        <div class="service-card info-card">
+                            <i class="ti ti-building-community service-icon"></i>
+                            <h6 class="fw-semibold">Layanan Tidak Ditemukan?</h6>
+                            <p class="mb-0">
+                                Jika tidak ada layanan pengajuan surat yang diinginkan, harap datang langsung ke
+                                <strong>Kantor
+                                    Desa</strong>.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -12,6 +12,12 @@
 
 <h5 class="mt-4 fw-semibold">2. Data Objek Tanah</h5>
 <div class="row g-3">
+    <div class="col-md-12">
+        <label class="form-label" for="objek_jenis_tanah">Jenis Tanah</label>
+        <input type="text" id="objek_jenis_tanah" name="form_data[objek][jenis_tanah]" class="form-control"
+            placeholder="Contoh: Tanah Sawah, Tanah Darat, Kebun"
+            value="{{ old('form_data.objek.jenis_tanah', 'Tanah Sawah') }}" required />
+    </div>
     <div class="col-12">
         <label class="form-label" for="objek_lokasi">Lokasi Tanah</label>
         <input type="text" id="objek_lokasi" name="form_data[objek][lokasi]" class="form-control"
@@ -56,6 +62,13 @@
     <div class="col-md-6 col-lg-3">
         <input type="text" name="form_data[objek][batas_barat]" class="form-control" placeholder="Batas Barat"
             value="{{ old('form_data.objek.batas_barat') }}" required />
+    </div>
+    {{-- Tambahkan ini di bagian "2. Data Objek Tanah" --}}
+    <div class="col-12">
+        <label class="form-label" for="objek_dasar_kepemilikan">Dasar Kepemilikan (Nama di Akta Sebelumnya)</label>
+        <input type="text" id="objek_dasar_kepemilikan" name="form_data[objek][dasar_kepemilikan]"
+            class="form-control" placeholder="Nama yang tertera pada akta jual beli/hibah/waris sebelumnya"
+            value="{{ old('form_data.objek.dasar_kepemilikan') }}" />
     </div>
 </div>
 

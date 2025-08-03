@@ -10,12 +10,21 @@ document.addEventListener('DOMContentLoaded', function (e) {
 
     if (dt_arsip_table.length) {
       var dt_arsip = dt_arsip_table.DataTable({
-        ajax: assetsPath + 'json/data-arsip.json',
+        processing: true,
+        serverSide: true,
+        ajax: {
+          url: arsipDokumenIndexUrl, // Variabel URL dari Blade
+          data: function (d) {
+            // Kirim nilai filter ke server
+            d.kategori = $('#filter-category').val();
+            d.tahun = $('#filter-tahun').val();
+          }
+        },
         columns: [
           { data: '' },
           { data: 'id' },
           { data: 'nama_dokumen' },
-          { data: 'category' },
+          { data: 'kategori' },
           { data: 'tanggal_unggah' },
           { data: 'ukuran_file' },
           { data: 'aksi' }
@@ -46,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
                         <i class="ti ${iconClass} ti-lg me-3"></i>
                         <div class="d-flex flex-column">
                           <h6 class="mb-0">${full.nama_dokumen}</h6>
-                          <small class="text-muted">${full.nomor_surat || ''}</small>
+                          <small class="text-muted">${full.nomor_dokumen || ''}</small>
                         </div>
                       </div>`;
             }
@@ -61,8 +70,8 @@ document.addEventListener('DOMContentLoaded', function (e) {
                 'Notulen Rapat': 'bg-label-info',
                 Lainnya: 'bg-label-secondary'
               };
-              const badgeClass = kategoriBadges[full.category] || 'bg-label-dark';
-              return `<span class="badge ${badgeClass}">${full.category}</span>`;
+              const badgeClass = kategoriBadges[full.kategori] || 'bg-label-dark';
+              return `<span class="badge ${badgeClass}">${full.kategori}</span>`;
             }
           },
           { targets: 4, searchable: true },
@@ -74,9 +83,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
             orderable: false,
             render: function (data, type, full, meta) {
               return `<div class="d-inline-block text-nowrap">
-                        <a href="javascript:;" class="btn btn-sm btn-icon"><i class="ti ti-eye"></i></a>
-                        <a href="javascript:;" class="btn btn-sm btn-icon"><i class="ti ti-download"></i></a>
-                        <a href="javascript:;" class="btn btn-sm btn-icon delete-record"><i class="ti ti-trash"></i></a>
+                        <button class="btn btn-sm btn-icon edit-record" data-id="${full.id}"><i class="ti ti-edit"></i></button>
+                        <a href="${full.file_url}" target="_blank" class="btn btn-sm btn-icon"><i class="ti ti-eye"></i></a>
+                        <a href="${full.file_url}" download class="btn btn-sm btn-icon"><i class="ti ti-download"></i></a>
+                        <a href="javascript:;" class="btn btn-sm btn-icon delete-record" data-id="${full.id}"><i class="ti ti-trash"></i></a>
                       </div>`;
             }
           }
@@ -193,8 +203,171 @@ document.addEventListener('DOMContentLoaded', function (e) {
           });
         }
       });
+      // Filter dikirim ke server, jadi kita hanya perlu trigger 'draw'
+      $('#filter-category, #filter-tahun').on('change', function () {
+        dt_arsip.draw();
+      });
+
+      $('.datatables-arsip tbody').on('click', '.delete-record', function () {
+        const arsipId = $(this).data('id');
+        const deleteUrl = arsipDeleteUrlTemplate.replace(':id', arsipId); // Gunakan URL template
+
+        Swal.fire({
+          title: 'Anda Yakin?',
+          text: 'Dokumen yang dihapus tidak dapat dikembalikan!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, hapus!',
+          cancelButtonText: 'Batal',
+          customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+          },
+          buttonsStyling: false
+        }).then(function (result) {
+          if (result.isConfirmed) {
+            // Kirim request hapus ke server
+            $.ajax({
+              url: deleteUrl,
+              type: 'DELETE',
+              data: {
+                _token: '{{ csrf_token() }}' // Pastikan CSRF token ada
+              },
+              success: function (response) {
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Dihapus!',
+                  text: response.message,
+                  customClass: {
+                    confirmButton: 'btn btn-success'
+                  }
+                });
+                // Muat ulang tabel untuk menampilkan data terbaru
+                dt_arsip.ajax.reload();
+              },
+              error: function (xhr) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Gagal!',
+                  text: 'Terjadi kesalahan saat menghapus dokumen.',
+                  customClass: {
+                    confirmButton: 'btn btn-danger'
+                  }
+                });
+              }
+            });
+          }
+        });
+      });
+
       // Mengganti title di dalam header yang dibuat oleh DOM
       $('div.head-label').html('<h5 class="card-title mb-0">Daftar Arsip Dokumen</h5>');
     }
+    $('.card-datatable').on('click', '.create-new', function () {
+      // Tampilkan modal dengan ID 'uploadArsipModal'
+      $('#uploadArsipModal').modal('show');
+    });
+
+    $('.datatables-arsip tbody').on('click', '.edit-record', function () {
+      const arsipId = $(this).data('id');
+      const showUrl = arsipShowUrlTemplate.replace(':id', arsipId);
+      const updateUrl = arsipUpdateUrlTemplate.replace(':id', arsipId);
+      // Ambil data dari server
+      $.ajax({
+        url: showUrl,
+        type: 'GET',
+        success: function (data) {
+          // Isi form di dalam modal
+          const form = $('#arsipForm');
+          form.attr('action', updateUrl);
+          $('#arsipMethod').val('POST'); // Method spoofing untuk Laravel
+          $('#modalCenterTitle').text('Edit Dokumen');
+          $('#nama_dokumen').val(data.nama_dokumen);
+          $('#nomor_dokumen').val(data.nomor_dokumen);
+          $('#kategori').val(data.kategori);
+          $('#tanggal_unggah').val(data.tanggal_unggah);
+          $('#file-info').remove();
+          if (data.file_url && data.nama_file) {
+            const fileInfoHtml = `
+            <div id="file-info" class="mt-2">
+                <small>File saat ini: 
+                    <a href="${data.file_url}" target="_blank" class="text-primary">${data.nama_file}</a>
+                </small>
+            </div>`;
+
+            // Tambahkan HTML tersebut setelah input file
+            $('#file_dokumen').after(fileInfoHtml);
+          }
+          // Tampilkan modal
+          $('#uploadArsipModal').modal('show');
+        },
+        error: function () {
+          alert('Gagal mengambil data dokumen.');
+        }
+      });
+    });
+
+    $('#arsipForm').on('submit', function (e) {
+      e.preventDefault(); // Mencegah form submit biasa
+
+      const form = $(this);
+      const url = form.attr('action');
+      const method = form.attr('method');
+      const formData = new FormData(this);
+
+      // Reset pesan error sebelumnya
+      form.find('.is-invalid').removeClass('is-invalid');
+      form.find('.invalid-feedback').text('');
+      $('#error-container').hide();
+
+      $.ajax({
+        url: url,
+        method: method,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Tutup modal
+          $('#uploadArsipModal').modal('hide');
+
+          // Tampilkan notifikasi sukses SweetAlert
+          Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+
+          // Muat ulang DataTable
+          dt_arsip.ajax.reload();
+        },
+        error: function (xhr) {
+          const errors = xhr.responseJSON.errors;
+          if (xhr.status === 422) {
+            // Error validasi
+            // Tampilkan error di bawah setiap input
+            for (const key in errors) {
+              const input = form.find(`[name="${key}"]`);
+              input.addClass('is-invalid');
+              input.next('.invalid-feedback').text(errors[key][0]);
+            }
+          } else {
+            // Tampilkan error umum
+            $('#error-container').text('Terjadi kesalahan pada server. Silakan coba lagi.').show();
+          }
+        }
+      });
+    });
+
+    // ✅ RESET MODAL SETELAH DITUTUP
+    $('#uploadArsipModal').on('hidden.bs.modal', function () {
+      $('#modalCenterTitle').text('Unggah Dokumen Baru');
+      const form = $('#arsipForm');
+      form.attr('action', '{{ route("admin.administrasi-arsip.store") }}');
+      form[0].reset(); // Mengosongkan semua input
+      $('#arsipMethod').val('POST');
+    });
   })();
 });
